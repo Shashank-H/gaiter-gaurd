@@ -19,6 +19,7 @@ import {
   handleDeleteAgent,
   handleUpdateAgentServices,
 } from '@/routes/agents';
+import { handleProxy } from '@/routes/proxy';
 import { errorResponse } from '@/utils/responses';
 import { initEncryption } from '@/services/encryption.service';
 
@@ -96,6 +97,11 @@ async function handleRequest(req: Request): Promise<Response> {
     if (agentServicesMatch) {
       const params = { id: agentServicesMatch[1] };
       if (method === 'PUT') return await handleUpdateAgentServices(req, params);
+    }
+
+    // Proxy endpoint (agent-facing)
+    if (pathname === '/proxy') {
+      if (method === 'POST') return await handleProxy(req);
     }
 
     // Check if path exists but with wrong method
