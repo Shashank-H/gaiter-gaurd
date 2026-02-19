@@ -11,9 +11,10 @@ Agents never hold production credentials. High-impact actions require explicit h
 ---
 
 ## How It Works
---
-Adding Soon
---
+```
+
+```
+
 
 1. **Register services** — add a target API, upload its docs (OpenAPI, markdown, or URL), and store its credentials in the vault
 2. **Provision agents** — create an Agent-Key scoped to specific services; the agent never sees real credentials
