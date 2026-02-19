@@ -14,8 +14,11 @@ import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthQueueRouteImport } from './routes/_auth/queue'
 import { Route as AuthServicesIndexRouteImport } from './routes/_auth/services/index'
+import { Route as AuthAgentsIndexRouteImport } from './routes/_auth/agents/index'
 import { Route as AuthServicesNewRouteImport } from './routes/_auth/services/new'
+import { Route as AuthAgentsNewRouteImport } from './routes/_auth/agents/new'
 import { Route as AuthServicesIdEditRouteImport } from './routes/_auth/services/$id/edit'
+import { Route as AuthAgentsIdEditRouteImport } from './routes/_auth/agents/$id/edit'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -41,9 +44,19 @@ const AuthServicesIndexRoute = AuthServicesIndexRouteImport.update({
   path: '/services/',
   getParentRoute: () => AuthRoute,
 } as any)
+const AuthAgentsIndexRoute = AuthAgentsIndexRouteImport.update({
+  id: '/agents/',
+  path: '/agents/',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AuthServicesNewRoute = AuthServicesNewRouteImport.update({
   id: '/services/new',
   path: '/services/new',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthAgentsNewRoute = AuthAgentsNewRouteImport.update({
+  id: '/agents/new',
+  path: '/agents/new',
   getParentRoute: () => AuthRoute,
 } as any)
 const AuthServicesIdEditRoute = AuthServicesIdEditRouteImport.update({
@@ -51,21 +64,32 @@ const AuthServicesIdEditRoute = AuthServicesIdEditRouteImport.update({
   path: '/services/$id/edit',
   getParentRoute: () => AuthRoute,
 } as any)
+const AuthAgentsIdEditRoute = AuthAgentsIdEditRouteImport.update({
+  id: '/agents/$id/edit',
+  path: '/agents/$id/edit',
+  getParentRoute: () => AuthRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/queue': typeof AuthQueueRoute
+  '/agents/new': typeof AuthAgentsNewRoute
   '/services/new': typeof AuthServicesNewRoute
+  '/agents/': typeof AuthAgentsIndexRoute
   '/services/': typeof AuthServicesIndexRoute
+  '/agents/$id/edit': typeof AuthAgentsIdEditRoute
   '/services/$id/edit': typeof AuthServicesIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/queue': typeof AuthQueueRoute
+  '/agents/new': typeof AuthAgentsNewRoute
   '/services/new': typeof AuthServicesNewRoute
+  '/agents': typeof AuthAgentsIndexRoute
   '/services': typeof AuthServicesIndexRoute
+  '/agents/$id/edit': typeof AuthAgentsIdEditRoute
   '/services/$id/edit': typeof AuthServicesIdEditRoute
 }
 export interface FileRoutesById {
@@ -74,8 +98,11 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
   '/_auth/queue': typeof AuthQueueRoute
+  '/_auth/agents/new': typeof AuthAgentsNewRoute
   '/_auth/services/new': typeof AuthServicesNewRoute
+  '/_auth/agents/': typeof AuthAgentsIndexRoute
   '/_auth/services/': typeof AuthServicesIndexRoute
+  '/_auth/agents/$id/edit': typeof AuthAgentsIdEditRoute
   '/_auth/services/$id/edit': typeof AuthServicesIdEditRoute
 }
 export interface FileRouteTypes {
@@ -84,16 +111,22 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/queue'
+    | '/agents/new'
     | '/services/new'
+    | '/agents/'
     | '/services/'
+    | '/agents/$id/edit'
     | '/services/$id/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/queue'
+    | '/agents/new'
     | '/services/new'
+    | '/agents'
     | '/services'
+    | '/agents/$id/edit'
     | '/services/$id/edit'
   id:
     | '__root__'
@@ -101,8 +134,11 @@ export interface FileRouteTypes {
     | '/_auth'
     | '/login'
     | '/_auth/queue'
+    | '/_auth/agents/new'
     | '/_auth/services/new'
+    | '/_auth/agents/'
     | '/_auth/services/'
+    | '/_auth/agents/$id/edit'
     | '/_auth/services/$id/edit'
   fileRoutesById: FileRoutesById
 }
@@ -149,11 +185,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthServicesIndexRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_auth/agents/': {
+      id: '/_auth/agents/'
+      path: '/agents'
+      fullPath: '/agents/'
+      preLoaderRoute: typeof AuthAgentsIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/_auth/services/new': {
       id: '/_auth/services/new'
       path: '/services/new'
       fullPath: '/services/new'
       preLoaderRoute: typeof AuthServicesNewRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/agents/new': {
+      id: '/_auth/agents/new'
+      path: '/agents/new'
+      fullPath: '/agents/new'
+      preLoaderRoute: typeof AuthAgentsNewRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_auth/services/$id/edit': {
@@ -163,20 +213,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthServicesIdEditRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_auth/agents/$id/edit': {
+      id: '/_auth/agents/$id/edit'
+      path: '/agents/$id/edit'
+      fullPath: '/agents/$id/edit'
+      preLoaderRoute: typeof AuthAgentsIdEditRouteImport
+      parentRoute: typeof AuthRoute
+    }
   }
 }
 
 interface AuthRouteChildren {
   AuthQueueRoute: typeof AuthQueueRoute
+  AuthAgentsNewRoute: typeof AuthAgentsNewRoute
   AuthServicesNewRoute: typeof AuthServicesNewRoute
+  AuthAgentsIndexRoute: typeof AuthAgentsIndexRoute
   AuthServicesIndexRoute: typeof AuthServicesIndexRoute
+  AuthAgentsIdEditRoute: typeof AuthAgentsIdEditRoute
   AuthServicesIdEditRoute: typeof AuthServicesIdEditRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthQueueRoute: AuthQueueRoute,
+  AuthAgentsNewRoute: AuthAgentsNewRoute,
   AuthServicesNewRoute: AuthServicesNewRoute,
+  AuthAgentsIndexRoute: AuthAgentsIndexRoute,
   AuthServicesIndexRoute: AuthServicesIndexRoute,
+  AuthAgentsIdEditRoute: AuthAgentsIdEditRoute,
   AuthServicesIdEditRoute: AuthServicesIdEditRoute,
 }
 
