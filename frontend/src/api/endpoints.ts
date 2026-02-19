@@ -46,6 +46,15 @@ export const api = {
     return res.json();
   },
 
+  register: async (email: string, password: string) => {
+    const res = await fetch(`${BACKEND_BASE}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    return res.json();
+  },
+
   // Approvals (dashboard-facing)
   listPendingApprovals: async () => {
     const res = await authedFetch('/approvals/pending');

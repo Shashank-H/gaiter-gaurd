@@ -1,38 +1,43 @@
 import React, { useState } from 'react';
 import { createFileRoute, useNavigate, Link } from '@tanstack/react-router';
 import { api } from '@/api/endpoints';
-import { setStoredToken, isAuthenticated } from '@/lib/api-client';
 
-export const Route = createFileRoute('/login')({
-  beforeLoad: () => {
-    // If already logged in, skip the login page
-    if (isAuthenticated()) {
-      // Will be handled by the redirect in component
-    }
-  },
-  component: LoginPage,
+export const Route = createFileRoute('/signup')({
+  component: SignupPage,
 });
 
-function LoginPage() {
+function SignupPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const result = await api.login(email, password);
+      const result = await api.register(email, password);
 
-      if (result.accessToken) {
-        setStoredToken(result.accessToken);
-        await navigate({ to: '/queue' });
+      if (!result.error && !result.message?.toLowerCase().includes('already')) {
+        // Success: no error field, or message indicates success
+        await navigate({ to: '/login' });
+      } else if (
+        result.error?.toLowerCase().includes('already') ||
+        result.message?.toLowerCase().includes('already')
+      ) {
+        setError('An account with this email already exists');
       } else {
-        setError(result.message || result.error || 'Login failed. Please check your credentials.');
+        setError(result.message || result.error || 'Registration failed. Please try again.');
       }
     } catch {
       setError('Unable to connect to the server. Please try again.');
@@ -76,7 +81,7 @@ function LoginPage() {
           </p>
         </div>
 
-        {/* Login card */}
+        {/* Signup card */}
         <div
           style={{
             background: '#0a0a0a',
@@ -93,7 +98,7 @@ function LoginPage() {
               margin: '0 0 1.5rem',
             }}
           >
-            Sign in
+            Create account
           </h2>
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -156,7 +161,43 @@ function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                autoComplete="current-password"
+                autoComplete="new-password"
+                style={{
+                  background: '#111',
+                  border: '1px solid #222',
+                  borderRadius: 6,
+                  color: '#ededed',
+                  padding: '0.625rem 0.75rem',
+                  fontSize: '0.875rem',
+                  width: '100%',
+                  boxSizing: 'border-box',
+                }}
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="confirmPassword"
+                style={{
+                  display: 'block',
+                  fontSize: '0.75rem',
+                  fontWeight: 500,
+                  color: '#888',
+                  marginBottom: '0.375rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                }}
+              >
+                Confirm password
+              </label>
+              <input
+                id="confirmPassword"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                autoComplete="new-password"
                 style={{
                   background: '#111',
                   border: '1px solid #222',
@@ -215,15 +256,15 @@ function LoginPage() {
                       animation: 'spin 0.6s linear infinite',
                     }}
                   />
-                  Signing in...
+                  Creating account...
                 </>
               ) : (
-                'Sign in'
+                'Create account'
               )}
             </button>
 
             <Link
-              to="/signup"
+              to="/login"
               style={{
                 fontSize: '0.875rem',
                 color: '#888',
@@ -232,7 +273,7 @@ function LoginPage() {
                 display: 'block',
               }}
             >
-              Don't have an account? Sign up
+              Already have an account? Sign in
             </Link>
           </form>
         </div>
