@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-15)
 
 **Core value:** Agents never touch production credentials and cannot execute high-impact actions without explicit human approval — the trust boundary is enforced by the gateway, not by the agent.
-**Current focus:** Phase 3 - Agent Authentication
+**Current focus:** Phase 4 - Gateway Proxy Core
 
 ## Current Position
 
-Phase: 3 of 6 (Agent Authentication)
-Plan: 2 of 2 in current phase
+Phase: 4 of 6 (Gateway Proxy Core)
+Plan: 1 of 2 in current phase
 Status: Complete
-Last activity: 2026-02-16 — Completed 03-02: Agent Management API and Auth Middleware
+Last activity: 2026-02-16 — Completed 04-01: Proxy Core Infrastructure
 
-Progress: [█████░░░░░] 50% (6/12 plans)
+Progress: [██████░░░░] 58% (7/12 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
+- Total plans completed: 7
 - Average duration: 4 min
-- Total execution time: 0.45 hours
+- Total execution time: 0.50 hours
 
 **By Phase:**
 
@@ -30,10 +30,11 @@ Progress: [█████░░░░░] 50% (6/12 plans)
 | 01-foundation | 2 | 8 min | 4 min |
 | 02-secret-vault | 2 | 10 min | 5 min |
 | 03-agent-authentication | 2 | 6 min | 3 min |
+| 04-gateway-proxy-core | 1 | 5 min | 5 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-01 (4 min), 02-02 (6 min), 03-01 (2 min), 03-02 (4 min)
-- Trend: Stable (last plan: 4 min)
+- Last 5 plans: 02-02 (6 min), 03-01 (2 min), 03-02 (4 min), 04-01 (5 min)
+- Trend: Stable (last plan: 5 min)
 
 *Updated after each plan completion*
 
@@ -71,6 +72,11 @@ Recent decisions affecting current work:
 - [Phase 03-agent-authentication]: Agent routes use JWT auth (dashboard-facing, not agent-facing)
 - [Phase 03-agent-authentication]: requireAgentAuth returns both agentId and userId for flexibility
 - [Phase 03-agent-authentication]: requireServiceAccess throws 403 (not 401) for scope violations
+- [Phase 04-gateway-proxy-core]: 24 hour TTL for idempotency keys (balance replay protection and storage)
+- [Phase 04-gateway-proxy-core]: Fire-and-forget audit logging to proxy_requests table
+- [Phase 04-gateway-proxy-core]: SHA-256 request hashing for duplicate detection (method+url+body)
+- [Phase 04-gateway-proxy-core]: 30s timeout and 10MB size limit for proxied requests
+- [Phase 04-gateway-proxy-core]: Manual editing of Drizzle migrations when regenerating full schema
 
 ### Pending Todos
 
@@ -83,5 +89,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-16
-Stopped at: Completed 03-02-PLAN.md — Agent Management API and Auth Middleware
+Stopped at: Completed 04-01-PLAN.md — Proxy Core Infrastructure
 Resume file: None
