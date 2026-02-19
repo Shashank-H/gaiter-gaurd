@@ -103,6 +103,50 @@ export const agentServices = pgTable('agent_services', {
   uniquePair: uniqueIndex('agent_services_unique_pair_idx').on(table.agentId, table.serviceId),
 }));
 
+// Idempotency keys table - stores idempotency keys with cached responses
+export const idempotencyKeys = pgTable('idempotency_keys', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  agentId: integer()
+    .references(() => agents.id, { onDelete: 'cascade' })
+    .notNull(),
+  key: varchar({ length: 255 }).notNull(),
+  requestHash: varchar({ length: 64 }).notNull(), // SHA-256 hex of method+url+body
+  status: varchar({ length: 20 }).notNull(), // 'processing', 'completed', 'failed'
+  responseStatus: integer(),
+  responseHeaders: text(), // JSON-serialized response headers
+  responseBody: text(),
+  createdAt: timestamp().defaultNow().notNull(),
+  completedAt: timestamp(),
+  expiresAt: timestamp().notNull(), // 24 hour TTL from creation
+}, (table) => ({
+  uniqueAgentKey: uniqueIndex('idempotency_keys_agent_key_idx').on(table.agentId, table.key),
+  expiresAtIdx: index('idempotency_keys_expires_at_idx').on(table.expiresAt),
+}));
+
+// Proxy requests table - audit log for proxy request lifecycle
+export const proxyRequests = pgTable('proxy_requests', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  agentId: integer()
+    .references(() => agents.id, { onDelete: 'cascade' })
+    .notNull(),
+  serviceId: integer()
+    .references(() => services.id, { onDelete: 'cascade' })
+    .notNull(),
+  idempotencyKeyId: integer()
+    .references(() => idempotencyKeys.id),
+  method: varchar({ length: 10 }).notNull(),
+  targetUrl: varchar({ length: 2048 }).notNull(),
+  intent: varchar({ length: 500 }).notNull(),
+  requestedAt: timestamp().defaultNow().notNull(),
+  completedAt: timestamp(),
+  statusCode: integer(),
+  errorMessage: text(),
+}, (table) => ({
+  agentIdIdx: index('proxy_requests_agent_id_idx').on(table.agentId),
+  serviceIdIdx: index('proxy_requests_service_id_idx').on(table.serviceId),
+  requestedAtIdx: index('proxy_requests_requested_at_idx').on(table.requestedAt),
+}));
+
 // Export inferred types for type-safe queries
 export type User = InferSelectModel<typeof users>;
 export type InsertUser = InferInsertModel<typeof users>;
@@ -118,3 +162,7 @@ export type Agent = InferSelectModel<typeof agents>;
 export type InsertAgent = InferInsertModel<typeof agents>;
 export type AgentService = InferSelectModel<typeof agentServices>;
 export type InsertAgentService = InferInsertModel<typeof agentServices>;
+export type IdempotencyKey = InferSelectModel<typeof idempotencyKeys>;
+export type InsertIdempotencyKey = InferInsertModel<typeof idempotencyKeys>;
+export type ProxyRequest = InferSelectModel<typeof proxyRequests>;
+export type InsertProxyRequest = InferInsertModel<typeof proxyRequests>;
