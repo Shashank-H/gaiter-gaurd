@@ -24,6 +24,7 @@ export interface ServicePayload {
   name: string;
   baseUrl: string;
   authType: string;
+  credentials?: Record<string, string>;
 }
 
 // Credential pair for upsert
