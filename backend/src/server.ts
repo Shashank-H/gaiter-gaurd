@@ -11,6 +11,14 @@ import {
   handleDeleteService,
   handleUpsertCredentials,
 } from '@/routes/services';
+import {
+  handleCreateAgent,
+  handleListAgents,
+  handleGetAgent,
+  handleUpdateAgent,
+  handleDeleteAgent,
+  handleUpdateAgentServices,
+} from '@/routes/agents';
 import { errorResponse } from '@/utils/responses';
 import { initEncryption } from '@/services/encryption.service';
 
@@ -65,6 +73,29 @@ async function handleRequest(req: Request): Promise<Response> {
     if (credMatch) {
       const params = { id: credMatch[1] };
       if (method === 'POST') return await handleUpsertCredentials(req, params);
+    }
+
+    // Try parameterized routes for /agents
+    // Pattern: /agents, /agents/:id, /agents/:id/services
+    if (pathname === '/agents') {
+      if (method === 'GET') return await handleListAgents(req);
+      if (method === 'POST') return await handleCreateAgent(req);
+    }
+
+    // Match /agents/:id
+    const agentMatch = pathname.match(/^\/agents\/(\d+)$/);
+    if (agentMatch) {
+      const params = { id: agentMatch[1] };
+      if (method === 'GET') return await handleGetAgent(req, params);
+      if (method === 'PUT') return await handleUpdateAgent(req, params);
+      if (method === 'DELETE') return await handleDeleteAgent(req, params);
+    }
+
+    // Match /agents/:id/services
+    const agentServicesMatch = pathname.match(/^\/agents\/(\d+)\/services$/);
+    if (agentServicesMatch) {
+      const params = { id: agentServicesMatch[1] };
+      if (method === 'PUT') return await handleUpdateAgentServices(req, params);
     }
 
     // Check if path exists but with wrong method
