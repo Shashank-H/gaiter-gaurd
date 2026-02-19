@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-15)
 
 **Core value:** Agents never touch production credentials and cannot execute high-impact actions without explicit human approval — the trust boundary is enforced by the gateway, not by the agent.
-**Current focus:** Phase 4 - Gateway Proxy Core
+**Current focus:** Phase 5 - Risk Approval Flow
 
 ## Current Position
 
-Phase: 4 of 6 (Gateway Proxy Core)
-Plan: 2 of 2 in current phase
-Status: Complete
-Last activity: 2026-02-16 — Completed 04-02: Proxy Route Handler
+Phase: 5 of 6 (Risk Approval Flow)
+Plan: 1 of 2 in current phase
+Status: In Progress
+Last activity: 2026-02-17 — Completed 05-01: Approval Queue Schema + Risk Service
 
-Progress: [███████░░░] 67% (8/12 plans)
+Progress: [████████░░] 75% (9/12 plans)
 
 ## Performance Metrics
 
@@ -31,10 +31,11 @@ Progress: [███████░░░] 67% (8/12 plans)
 | 02-secret-vault | 2 | 10 min | 5 min |
 | 03-agent-authentication | 2 | 6 min | 3 min |
 | 04-gateway-proxy-core | 2 | 6 min | 3 min |
+| 05-risk-approval-flow | 1 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-01 (2 min), 03-02 (4 min), 04-01 (5 min), 04-02 (1 min)
-- Trend: Improving (last plan: 1 min)
+- Last 5 plans: 03-02 (4 min), 04-01 (5 min), 04-02 (1 min), 05-01 (2 min)
+- Trend: Stable (last plan: 2 min)
 
 *Updated after each plan completion*
 
@@ -80,6 +81,10 @@ Recent decisions affecting current work:
 - [Phase 04-gateway-proxy-core]: Header takes precedence over body for Idempotency-Key (04-02)
 - [Phase 04-gateway-proxy-core]: X-Proxy-Status and X-Idempotency-Status headers for response metadata (04-02)
 - [Phase 04-gateway-proxy-core]: Content-Type passthrough from target response (04-02)
+- [Phase 05-risk-approval-flow]: LLM score weighted 0.7, method heuristic 0.3 — LLM intent analysis more informative than HTTP method alone (05-01)
+- [Phase 05-risk-approval-flow]: Fail-closed on LLM error: escalated heuristic = min(1, heuristicScore + 0.3) — LLM unavailability never silently passes risky requests (05-01)
+- [Phase 05-risk-approval-flow]: AbortController timeout for LLM (default 10s) separate from 30s proxy timeout to prevent latency budget conflicts (05-01)
+- [Phase 05-risk-approval-flow]: Conditional transitionStatus (WHERE status = fromStatus) prevents TOCTOU race conditions in approval state machine (05-01)
 
 ### Pending Todos
 
@@ -91,6 +96,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-16
-Stopped at: Completed 04-02-PLAN.md — Proxy Route Handler
+Last session: 2026-02-17
+Stopped at: Completed 05-01-PLAN.md — Approval Queue Schema + Risk Service
 Resume file: None
