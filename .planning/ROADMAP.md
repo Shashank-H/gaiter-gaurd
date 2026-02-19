@@ -108,10 +108,12 @@ Plans:
   2. User can approve pending actions, which triggers execution and returns response to polling agent
   3. User can deny pending actions, which returns DENIED status to polling agent
   4. User can register, edit, and delete services with their API keys through the dashboard UI
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- TBD (will be defined during phase planning)
+- [ ] 06-01-PLAN.md — Backend approval endpoints, frontend scaffolding (TanStack Start, oat.ink, auth, primitives)
+- [ ] 06-02-PLAN.md — Approval queue page with swipeable action cards (DASH-01)
+- [ ] 06-03-PLAN.md — Service management pages and visual verification (DASH-02)
 
 ## Progress
 
@@ -125,4 +127,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 3. Agent Authentication | 2/2 | ✓ Complete | 2026-02-16 |
 | 4. Gateway Proxy Core | 2/2 | ✓ Complete | 2026-02-16 |
 | 5. Risk & Approval Flow | 0/2 | Not started | - |
-| 6. Dashboard | 0/TBD | Not started | - |
+| 6. Dashboard | 0/3 | Not started | - |
