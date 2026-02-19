@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-15)
 
 **Core value:** Agents never touch production credentials and cannot execute high-impact actions without explicit human approval — the trust boundary is enforced by the gateway, not by the agent.
-**Current focus:** Phase 2 - Secret Vault
+**Current focus:** Phase 3 - Agent Authentication
 
 ## Current Position
 
-Phase: 2 of 6 (Secret Vault)
-Plan: 2 of 3 in current phase
+Phase: 3 of 6 (Agent Authentication)
+Plan: 1 of 2 in current phase
 Status: In progress
-Last activity: 2026-02-15 — Completed 02-02: Service CRUD API with Encrypted Credentials
+Last activity: 2026-02-16 — Completed 03-01: Agent Identity Schema and Service Layer
 
-Progress: [███░░░░░░░] 33% (4/12 plans)
+Progress: [████░░░░░░] 42% (5/12 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
-- Average duration: 5 min
-- Total execution time: 0.35 hours
+- Total plans completed: 5
+- Average duration: 4 min
+- Total execution time: 0.38 hours
 
 **By Phase:**
 
@@ -29,10 +29,11 @@ Progress: [███░░░░░░░] 33% (4/12 plans)
 |-------|-------|-------|----------|
 | 01-foundation | 2 | 8 min | 4 min |
 | 02-secret-vault | 2 | 10 min | 5 min |
+| 03-agent-authentication | 1 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (5 min), 01-02 (3 min), 02-01 (4 min), 02-02 (6 min)
-- Trend: Consistent velocity
+- Last 5 plans: 01-02 (3 min), 02-01 (4 min), 02-02 (6 min), 03-01 (2 min)
+- Trend: Accelerating (last plan: 2 min)
 
 *Updated after each plan completion*
 
@@ -61,6 +62,11 @@ Recent decisions affecting current work:
 - [Phase 02-secret-vault]: Parameterized routing pattern for /services/:id paths
 - [Phase 02-secret-vault]: API responses show credential key names but never values
 - [Phase 02-secret-vault]: Replace semantics for credential updates (delete all, insert new)
+- [Phase 03-agent-authentication]: Use agt_ prefix for agent API keys (vs service-specific prefixes)
+- [Phase 03-agent-authentication]: Store only key hash, return full key once on creation
+- [Phase 03-agent-authentication]: Use keyPrefix (12 chars) for safe display in UI
+- [Phase 03-agent-authentication]: Soft delete via isActive flag (vs hard delete)
+- [Phase 03-agent-authentication]: Track lastUsedAt for security monitoring
 
 ### Pending Todos
 
@@ -72,6 +78,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-15
-Stopped at: Completed 02-02-PLAN.md — Service CRUD API with encrypted credentials
+Last session: 2026-02-16
+Stopped at: Completed 03-01-PLAN.md — Agent Identity Schema and Service Layer
 Resume file: None
