@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-15)
 
 **Core value:** Agents never touch production credentials and cannot execute high-impact actions without explicit human approval — the trust boundary is enforced by the gateway, not by the agent.
-**Current focus:** Phase 5 - Risk Approval Flow
+**Current focus:** Phase 5 complete — Phase 6 (Dashboard) up next
 
 ## Current Position
 
 Phase: 5 of 6 (Risk Approval Flow)
-Plan: 1 of 2 in current phase
-Status: In Progress
-Last activity: 2026-02-17 — Completed 05-01: Approval Queue Schema + Risk Service
+Plan: 2 of 2 in current phase
+Status: Phase Complete
+Last activity: 2026-02-17 — Completed 05-02: Risk Gate, Status Polling, and Execute Endpoint
 
-Progress: [████████░░] 75% (9/12 plans)
+Progress: [█████████░] 83% (10/12 plans)
 
 ## Performance Metrics
 
@@ -31,11 +31,11 @@ Progress: [████████░░] 75% (9/12 plans)
 | 02-secret-vault | 2 | 10 min | 5 min |
 | 03-agent-authentication | 2 | 6 min | 3 min |
 | 04-gateway-proxy-core | 2 | 6 min | 3 min |
-| 05-risk-approval-flow | 1 | 2 min | 2 min |
+| 05-risk-approval-flow | 2 | 5 min | 2.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-02 (4 min), 04-01 (5 min), 04-02 (1 min), 05-01 (2 min)
-- Trend: Stable (last plan: 2 min)
+- Last 5 plans: 04-01 (5 min), 04-02 (1 min), 05-01 (2 min), 05-02 (3 min)
+- Trend: Stable (last plan: 3 min)
 
 *Updated after each plan completion*
 
@@ -85,6 +85,10 @@ Recent decisions affecting current work:
 - [Phase 05-risk-approval-flow]: Fail-closed on LLM error: escalated heuristic = min(1, heuristicScore + 0.3) — LLM unavailability never silently passes risky requests (05-01)
 - [Phase 05-risk-approval-flow]: AbortController timeout for LLM (default 10s) separate from 30s proxy timeout to prevent latency budget conflicts (05-01)
 - [Phase 05-risk-approval-flow]: Conditional transitionStatus (WHERE status = fromStatus) prevents TOCTOU race conditions in approval state machine (05-01)
+- [Phase 05-risk-approval-flow]: Risk gate positioned before idempotency check — risky requests blocked regardless of cached state, idempotency store stays clean (05-02)
+- [Phase 05-risk-approval-flow]: Status ownership check returns 404 (not 403) for wrong agent — prevents action ID enumeration attacks (05-02)
+- [Phase 05-risk-approval-flow]: markExecuted fire-and-forget — response stored asynchronously, doesn't add latency to execute endpoint response (05-02)
+- [Phase 05-risk-approval-flow]: Auth headers stripped at gate time (before storage), credentials injected fresh at execute time from encrypted vault (05-02)
 
 ### Pending Todos
 
@@ -97,5 +101,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-17
-Stopped at: Completed 05-01-PLAN.md — Approval Queue Schema + Risk Service
+Stopped at: Completed 05-02-PLAN.md — Risk Gate, Status Polling, and Execute Endpoint
 Resume file: None
