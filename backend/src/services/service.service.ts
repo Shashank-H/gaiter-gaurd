@@ -1,7 +1,7 @@
 // Service CRUD operations with encrypted credential management
 
 import { z } from 'zod';
-import { db } from '@/db';
+import { db } from '@/config/db';
 import { services, credentials, type Service, type InsertService, type InsertCredential } from '@/db/schema';
 import { encrypt } from '@/services/encryption.service';
 import { eq, and } from 'drizzle-orm';
