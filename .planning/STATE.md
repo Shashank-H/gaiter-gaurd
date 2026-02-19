@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-15)
 ## Current Position
 
 Phase: 3 of 6 (Agent Authentication)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-02-16 — Completed 03-01: Agent Identity Schema and Service Layer
+Plan: 2 of 2 in current phase
+Status: Complete
+Last activity: 2026-02-16 — Completed 03-02: Agent Management API and Auth Middleware
 
-Progress: [████░░░░░░] 42% (5/12 plans)
+Progress: [█████░░░░░] 50% (6/12 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
+- Total plans completed: 6
 - Average duration: 4 min
-- Total execution time: 0.38 hours
+- Total execution time: 0.45 hours
 
 **By Phase:**
 
@@ -29,11 +29,11 @@ Progress: [████░░░░░░] 42% (5/12 plans)
 |-------|-------|-------|----------|
 | 01-foundation | 2 | 8 min | 4 min |
 | 02-secret-vault | 2 | 10 min | 5 min |
-| 03-agent-authentication | 1 | 2 min | 2 min |
+| 03-agent-authentication | 2 | 6 min | 3 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-02 (3 min), 02-01 (4 min), 02-02 (6 min), 03-01 (2 min)
-- Trend: Accelerating (last plan: 2 min)
+- Last 5 plans: 02-01 (4 min), 02-02 (6 min), 03-01 (2 min), 03-02 (4 min)
+- Trend: Stable (last plan: 4 min)
 
 *Updated after each plan completion*
 
@@ -67,6 +67,10 @@ Recent decisions affecting current work:
 - [Phase 03-agent-authentication]: Use keyPrefix (12 chars) for safe display in UI
 - [Phase 03-agent-authentication]: Soft delete via isActive flag (vs hard delete)
 - [Phase 03-agent-authentication]: Track lastUsedAt for security monitoring
+- [Phase 03-agent-authentication]: Fire-and-forget lastUsedAt update (no blocking on audit log)
+- [Phase 03-agent-authentication]: Agent routes use JWT auth (dashboard-facing, not agent-facing)
+- [Phase 03-agent-authentication]: requireAgentAuth returns both agentId and userId for flexibility
+- [Phase 03-agent-authentication]: requireServiceAccess throws 403 (not 401) for scope violations
 
 ### Pending Todos
 
@@ -79,5 +83,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-16
-Stopped at: Completed 03-01-PLAN.md — Agent Identity Schema and Service Layer
+Stopped at: Completed 03-02-PLAN.md — Agent Management API and Auth Middleware
 Resume file: None
