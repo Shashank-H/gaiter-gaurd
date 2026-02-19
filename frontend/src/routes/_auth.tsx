@@ -128,6 +128,26 @@ function AuthLayout() {
                 Services
               </Link>
             </li>
+            <li>
+              <Link
+                to="/agents/"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  padding: '0.375rem 0.75rem',
+                  borderRadius: 6,
+                  fontSize: '0.875rem',
+                  fontWeight: 500,
+                  textDecoration: 'none',
+                  color: isActive('/agents') ? '#ededed' : '#555',
+                  background: isActive('/agents') ? '#111' : 'transparent',
+                  border: isActive('/agents') ? '1px solid #222' : '1px solid transparent',
+                  transition: 'color 0.15s ease, background 0.15s ease, border-color 0.15s ease',
+                }}
+              >
+                Agents
+              </Link>
+            </li>
           </menu>
 
           {/* Logout button */}
