@@ -199,5 +199,26 @@ gaiter-guard/
 │   └── src/
 │       ├── routes/       # TanStack Router pages
 │       └── components/   # UI components
+├── skill/
+│   └── gaiterguard-gateway/       # Agent skill for gateway integration
 └── docker-compose.yaml
 ```
+
+---
+
+## Agent Skill
+
+If you're building AI agents that call external APIs through GaiterGuard, an agent skill is bundled in this repo. It gives the agent full knowledge of the gateway protocol — `POST /proxy`, 428 handling, polling, and execution — so you don't have to explain it each session.
+
+**Install:**
+
+```bash
+cp -r skill/gaiterguard-gateway ~/.claude/skills/
+```
+
+The skill covers:
+- Constructing `POST /proxy` requests with proper `Agent-Key` and `Idempotency-Key` headers
+- Handling `428` risk-blocked responses with a full polling loop template (Python + bash)
+- Re-invoking the agent with the execution result **and the original blocked request context**
+- All response shapes for `/status/:id` and `/proxy/execute/:id`
+- Error codes and risk scoring reference
