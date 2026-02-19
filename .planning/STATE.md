@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-15)
 
 **Core value:** Agents never touch production credentials and cannot execute high-impact actions without explicit human approval — the trust boundary is enforced by the gateway, not by the agent.
-**Current focus:** Phase 6 (Dashboard) — Plan 02 complete, Plan 03 up next
+**Current focus:** Phase 06.1 (Agent Management UI) — Plan 01 complete, Plan 02 up next
 
 ## Current Position
 
-Phase: 6 of 6 (Dashboard)
-Plan: 2 of 3 in current phase
+Phase: 06.1 of 6 (Agent Management UI - inserted after Dashboard)
+Plan: 1 of 3 in current phase (06.1-01 complete)
 Status: In Progress
-Last activity: 2026-02-17 — Completed 06-02: Approval Queue UI with Swipeable Cards
+Last activity: 2026-02-18 — Completed 06.1-01: Agent API Layer, Hooks, Card, and List Page
 
-Progress: [█████████░] 92% (12/13 plans)
+Progress: [█████████░] 92% (12/13 plans + 06.1 phase in progress)
 
 ## Performance Metrics
 
@@ -97,6 +97,10 @@ Recent decisions affecting current work:
 - [Phase 06-dashboard]: listPendingForUser orders by createdAt ASC (oldest first for queue processing)
 - [Phase 06-dashboard]: React 19 + react-spring 9.x children incompatibility — cast animated('div') as unknown as React.FC<AnimatedDivProps> for SpringValue + children support
 - [Phase 06-dashboard]: Optimistic mutation pattern: cancelQueries → setQueryData filter → snapshot context → onError revert → onSettled invalidate
+- [Phase 06.1-agent-management-ui]: AgentType interface exported from endpoints.ts alongside API methods (avoids circular imports)
+- [Phase 06.1-agent-management-ui]: Revoked agents section uses native <details>/<summary> element for collapse — no React state needed
+- [Phase 06.1-agent-management-ui]: Revoke/reactivate mutations use field update optimistic pattern (not filter/add), following useDeleteService for delete
+- [Phase 06.1-agent-management-ui]: Future route paths cast as 'never' until routeTree.gen.ts regenerates on next dev run
 
 ### Roadmap Evolution
 
@@ -112,6 +116,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-17
-Stopped at: Completed 06-02-PLAN.md — Approval Queue UI with Swipeable Cards
+Last session: 2026-02-18
+Stopped at: Completed 06.1-01-PLAN.md — Agent API Layer, Hooks, Card, and List Page
 Resume file: None
