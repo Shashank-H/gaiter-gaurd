@@ -77,10 +77,11 @@ Plans:
   2. Gateway injects real API credentials from the vault into the outbound request
   3. Non-risky requests are forwarded to target service and return 200 with full response
   4. Idempotency-Key prevents duplicate execution of the same request
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- TBD (will be defined during phase planning)
+- [ ] 04-01-PLAN.md — Database schema (idempotency_keys, proxy_requests), idempotency service, proxy service
+- [ ] 04-02-PLAN.md — POST /proxy route handler and server wiring
 
 ### Phase 5: Risk & Approval Flow
 **Goal**: Risky requests are blocked with 428 status, stored in approval queue, and agents can poll for resolution
@@ -121,6 +122,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 1. Foundation | 2/2 | ✓ Complete | 2026-02-15 |
 | 2. Secret Vault | 0/3 | In progress | - |
 | 3. Agent Authentication | 2/2 | ✓ Complete | 2026-02-16 |
-| 4. Gateway Proxy Core | 0/TBD | Not started | - |
+| 4. Gateway Proxy Core | 0/2 | Not started | - |
 | 5. Risk & Approval Flow | 0/TBD | Not started | - |
 | 6. Dashboard | 0/TBD | Not started | - |
