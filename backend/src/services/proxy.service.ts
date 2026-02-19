@@ -8,6 +8,8 @@ import { eq, and } from 'drizzle-orm';
 import { decrypt } from '@/services/encryption.service';
 import { checkIdempotency, completeIdempotency, failIdempotency } from '@/services/idempotency.service';
 import { createHash } from 'node:crypto';
+import { assessRisk } from '@/services/risk.service';
+import { createApprovalQueueEntry } from '@/services/approval.service';
 
 /**
  * Custom error classes for proxy operations
@@ -35,6 +37,18 @@ export class ForbiddenError extends Error {
   constructor(message: string = 'Access forbidden') {
     super(message);
     this.name = 'ForbiddenError';
+  }
+}
+
+export class RiskyRequestError extends Error {
+  statusCode = 428;
+  constructor(
+    public actionId: string,
+    public riskScore: number,
+    public riskExplanation: string
+  ) {
+    super('Request requires human approval');
+    this.name = 'RiskyRequestError';
   }
 }
 
@@ -372,6 +386,38 @@ export async function executeProxyRequest(
 
     // Step 2: Validate target URL (SSRF check)
     validateTargetUrl(data.targetUrl, service.baseUrl);
+
+    // Step 2.5: Risk assessment gate
+    // Runs after URL validation, before idempotency — risky requests are blocked
+    // regardless of caching (per research Pattern 1)
+    const riskResult = await assessRisk({
+      intent: data.intent,
+      method: data.method,
+      targetUrl: data.targetUrl,
+      body: data.body ?? null,
+    });
+
+    if (riskResult.blocked) {
+      // Strip auth-related headers before storing (pitfall #1 — never persist credentials)
+      const safeHeaders = { ...data.headers };
+      delete safeHeaders['Authorization'];
+      delete safeHeaders['authorization'];
+      delete safeHeaders['Agent-Key'];
+      delete safeHeaders['agent-key'];
+
+      const actionId = await createApprovalQueueEntry({
+        agentId,
+        serviceId: service.id,
+        method: data.method,
+        targetUrl: data.targetUrl,
+        requestHeaders: safeHeaders,
+        requestBody: data.body ?? null,
+        intent: data.intent,
+        riskScore: riskResult.score,
+        riskExplanation: riskResult.explanation,
+      });
+      throw new RiskyRequestError(actionId, riskResult.score, riskResult.explanation);
+    }
 
     // Step 3: Check idempotency (if key provided)
     if (data.idempotencyKey) {

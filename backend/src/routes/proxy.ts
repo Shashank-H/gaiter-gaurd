@@ -9,6 +9,7 @@ import {
   ProxyError,
   NotFoundError,
   ForbiddenError,
+  RiskyRequestError,
 } from '@/services/proxy.service';
 import { successResponse, errorResponse } from '@/utils/responses';
 
@@ -89,6 +90,18 @@ export async function handleProxy(req: Request): Promise<Response> {
     }
     if (error instanceof ForbiddenError) {
       return errorResponse(error.message, error.statusCode);
+    }
+    if (error instanceof RiskyRequestError) {
+      return Response.json(
+        {
+          error: 'Request requires human approval',
+          action_id: error.actionId,
+          risk_score: error.riskScore,
+          risk_explanation: error.riskExplanation,
+          status_url: `/status/${error.actionId}`,
+        },
+        { status: 428 }
+      );
     }
     if (error instanceof ProxyError) {
       return errorResponse(error.message, error.statusCode);
