@@ -33,8 +33,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans:** 2 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Project scaffolding, Bun server, DB schema, health endpoints
-- [ ] 01-02-PLAN.md — User authentication (register, login, JWT, refresh token rotation)
+- [x] 01-01-PLAN.md — Project scaffolding, Bun server, DB schema, health endpoints
+- [x] 01-02-PLAN.md — User authentication (register, login, JWT, refresh token rotation)
 
 ### Phase 2: Secret Vault
 **Goal**: Users can securely register services, store encrypted credentials, and upload API documentation
@@ -46,10 +46,12 @@ Plans:
   3. User can upload API documentation (OpenAPI specs, markdown, or URLs) for registered services
   4. User can edit service details or delete services and their associated credentials
   5. API keys are never exposed in API responses or logs
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- TBD (will be defined during phase planning)
+- [ ] 02-01-PLAN.md — Database schema (services, credentials, docs), AES-256-GCM encryption service, Zod validation
+- [ ] 02-02-PLAN.md — Service CRUD with encrypted credentials (VAULT-01, VAULT-02, VAULT-04)
+- [ ] 02-03-PLAN.md — Documentation upload and management (VAULT-03)
 
 ### Phase 3: Agent Authentication
 **Goal**: Agents can authenticate with unique keys and all requests are validated against service scope
@@ -116,7 +118,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/2 | ✓ Complete | 2026-02-15 |
-| 2. Secret Vault | 0/TBD | Not started | - |
+| 2. Secret Vault | 0/3 | In progress | - |
 | 3. Agent Authentication | 0/TBD | Not started | - |
 | 4. Gateway Proxy Core | 0/TBD | Not started | - |
 | 5. Risk & Approval Flow | 0/TBD | Not started | - |
