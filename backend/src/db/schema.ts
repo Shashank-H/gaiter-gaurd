@@ -1,6 +1,6 @@
 // Database schema definitions using Drizzle ORM
 
-import { pgTable, integer, varchar, timestamp, text, index, boolean, uniqueIndex } from 'drizzle-orm/pg-core';
+import { pgTable, integer, varchar, timestamp, text, index, boolean, uniqueIndex, real } from 'drizzle-orm/pg-core';
 import type { InferSelectModel, InferInsertModel } from 'drizzle-orm';
 
 // Users table
@@ -147,6 +147,50 @@ export const proxyRequests = pgTable('proxy_requests', {
   requestedAtIdx: index('proxy_requests_requested_at_idx').on(table.requestedAt),
 }));
 
+// Approval queue table - stores risk-flagged requests awaiting human approval
+export const approvalQueue = pgTable('approval_queue', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  // UUID v4 generated in app code via crypto.randomUUID() — no pgcrypto dependency
+  actionId: varchar({ length: 36 }).notNull().unique(),
+  agentId: integer()
+    .references(() => agents.id, { onDelete: 'cascade' })
+    .notNull(),
+  serviceId: integer()
+    .references(() => services.id, { onDelete: 'cascade' })
+    .notNull(),
+
+  // Stored request — auth headers stripped before storage; credentials re-injected at execution
+  method: varchar({ length: 10 }).notNull(),
+  targetUrl: varchar({ length: 2048 }).notNull(),
+  requestHeaders: text(), // JSON-serialized, auth headers stripped
+  requestBody: text(),    // nullable
+  intent: varchar({ length: 500 }).notNull(),
+
+  // Risk assessment result
+  riskScore: real().notNull(),          // 0-1 float; PostgreSQL REAL (4-byte), sufficient for risk scores
+  riskExplanation: text().notNull(),
+
+  // 5-state machine: PENDING | APPROVED | DENIED | EXPIRED | EXECUTED
+  status: varchar({ length: 20 }).notNull().default('PENDING'),
+
+  // TTL: set when status flips to APPROVED; if not executed by this time, status → EXPIRED
+  approvalExpiresAt: timestamp(),
+
+  createdAt: timestamp().defaultNow().notNull(),
+  resolvedAt: timestamp(), // when APPROVED or DENIED
+  executedAt: timestamp(), // when EXECUTED
+
+  // Cached execution result (set after EXECUTED)
+  responseStatus: integer(),
+  responseHeaders: text(), // JSON-serialized
+  responseBody: text(),
+}, (table) => ({
+  actionIdIdx: uniqueIndex('approval_queue_action_id_idx').on(table.actionId),
+  agentIdIdx: index('approval_queue_agent_id_idx').on(table.agentId),
+  statusIdx: index('approval_queue_status_idx').on(table.status),
+  createdAtIdx: index('approval_queue_created_at_idx').on(table.createdAt),
+}));
+
 // Export inferred types for type-safe queries
 export type User = InferSelectModel<typeof users>;
 export type InsertUser = InferInsertModel<typeof users>;
@@ -166,3 +210,5 @@ export type IdempotencyKey = InferSelectModel<typeof idempotencyKeys>;
 export type InsertIdempotencyKey = InferInsertModel<typeof idempotencyKeys>;
 export type ProxyRequest = InferSelectModel<typeof proxyRequests>;
 export type InsertProxyRequest = InferInsertModel<typeof proxyRequests>;
+export type ApprovalQueueEntry = InferSelectModel<typeof approvalQueue>;
+export type InsertApprovalQueueEntry = InferInsertModel<typeof approvalQueue>;

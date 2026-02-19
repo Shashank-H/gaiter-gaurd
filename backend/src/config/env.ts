@@ -33,4 +33,17 @@ export const env = {
     return secret;
   })(),
   ENCRYPTION_SALT: getEnvVar('ENCRYPTION_SALT', false) || 'gaiter-guard-salt-v1',
+  // LLM configuration for risk assessment
+  LLM_BASE_URL: getEnvVar('LLM_BASE_URL'),
+  LLM_API_KEY: getEnvVar('LLM_API_KEY'),
+  LLM_MODEL: getEnvVar('LLM_MODEL', false) || 'gpt-4o-mini',
+  LLM_TIMEOUT_MS: getEnvNumber('LLM_TIMEOUT_MS', 10000),
+  RISK_THRESHOLD: (() => {
+    const val = parseFloat(process.env.RISK_THRESHOLD || '0.5');
+    if (isNaN(val) || val < 0 || val > 1) {
+      throw new Error('RISK_THRESHOLD must be a number between 0 and 1');
+    }
+    return val;
+  })(),
+  APPROVAL_EXECUTE_TTL_HOURS: getEnvNumber('APPROVAL_EXECUTE_TTL_HOURS', 1),
 };
