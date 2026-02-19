@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "start": "vite preview"
+    "start": "vite preview --host"
   },
   "dependencies": {
     "@knadh/oat": "^0.3.0",

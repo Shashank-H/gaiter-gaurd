@@ -7,6 +7,9 @@ RUN bun install
 
 COPY . .
 
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
+
 EXPOSE 3000
 
-CMD ["bun", "run", "start"]
+ENTRYPOINT ["./entrypoint.sh"]

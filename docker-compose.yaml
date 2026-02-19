@@ -34,6 +34,10 @@ services:
       - LLM_BASE_URL=https://api.openai.com/v1
       - LLM_API_KEY=sk-placeholder-replace-with-real-key
       - LLM_MODEL=gpt-4o-mini
+      - LLM_TIMEOUT_MS=10000
+      - RISK_THRESHOLD=0.5
+      - APPROVAL_EXECUTE_TTL_HOURS=1
+      - NODE_ENV=production
     depends_on:
       db:
         condition: service_healthy
@@ -42,9 +46,11 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:3000
     restart: always
     ports:
-      - "3001:3000" # Mapping host 3001 to container 3000 to avoid conflict with backend
+      - "4173:4173"
     environment:
       - VITE_API_URL=http://localhost:3000
     depends_on:

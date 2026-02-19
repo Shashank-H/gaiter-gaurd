@@ -7,17 +7,17 @@
     "dev": "bun --watch src/server.ts",
     "start": "bun run db:migrate && bun src/server.ts",
     "db:generate": "bun drizzle-kit generate",
-    "db:migrate": "bun run scripts/migrate.ts"
+    "db:migrate": "bun drizzle-kit push"
   },
   "devDependencies": {
-    "@types/bun": "latest",
-    "drizzle-kit": "latest"
+    "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
     "drizzle-orm": "latest",
+    "drizzle-kit": "latest",
     "jose": "latest",
     "postgres": "latest",
     "zod": "^4.3.6"

@@ -7,11 +7,12 @@ RUN bun install
 
 COPY . .
 
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 RUN bun run build
 
-EXPOSE 3000
+# Default port for TanStack Start with vite is often 4173.
+EXPOSE 4173
 
-# TanStack Start with Bun usually runs the build output.
-# Default port for TanStack Start is often 3000, 
-# but let's assume it defaults to what's defined in the environment.
 CMD ["bun", "run", "start"]
