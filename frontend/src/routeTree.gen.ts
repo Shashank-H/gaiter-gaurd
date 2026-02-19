@@ -13,6 +13,9 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthQueueRouteImport } from './routes/_auth/queue'
+import { Route as AuthServicesIndexRouteImport } from './routes/_auth/services/index'
+import { Route as AuthServicesNewRouteImport } from './routes/_auth/services/new'
+import { Route as AuthServicesIdEditRouteImport } from './routes/_auth/services/$id/edit'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -33,16 +36,37 @@ const AuthQueueRoute = AuthQueueRouteImport.update({
   path: '/queue',
   getParentRoute: () => AuthRoute,
 } as any)
+const AuthServicesIndexRoute = AuthServicesIndexRouteImport.update({
+  id: '/services/',
+  path: '/services/',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthServicesNewRoute = AuthServicesNewRouteImport.update({
+  id: '/services/new',
+  path: '/services/new',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthServicesIdEditRoute = AuthServicesIdEditRouteImport.update({
+  id: '/services/$id/edit',
+  path: '/services/$id/edit',
+  getParentRoute: () => AuthRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/queue': typeof AuthQueueRoute
+  '/services/': typeof AuthServicesIndexRoute
+  '/services/new': typeof AuthServicesNewRoute
+  '/services/$id/edit': typeof AuthServicesIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/queue': typeof AuthQueueRoute
+  '/services/': typeof AuthServicesIndexRoute
+  '/services/new': typeof AuthServicesNewRoute
+  '/services/$id/edit': typeof AuthServicesIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -50,13 +74,16 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
   '/_auth/queue': typeof AuthQueueRoute
+  '/_auth/services/': typeof AuthServicesIndexRoute
+  '/_auth/services/new': typeof AuthServicesNewRoute
+  '/_auth/services/$id/edit': typeof AuthServicesIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/queue'
+  fullPaths: '/' | '/login' | '/queue' | '/services/' | '/services/new' | '/services/$id/edit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/queue'
-  id: '__root__' | '/' | '/_auth' | '/login' | '/_auth/queue'
+  to: '/' | '/login' | '/queue' | '/services/' | '/services/new' | '/services/$id/edit'
+  id: '__root__' | '/' | '/_auth' | '/login' | '/_auth/queue' | '/_auth/services/' | '/_auth/services/new' | '/_auth/services/$id/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -95,15 +122,42 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthQueueRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_auth/services/': {
+      id: '/_auth/services/'
+      path: '/services/'
+      fullPath: '/services/'
+      preLoaderRoute: typeof AuthServicesIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/services/new': {
+      id: '/_auth/services/new'
+      path: '/services/new'
+      fullPath: '/services/new'
+      preLoaderRoute: typeof AuthServicesNewRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/services/$id/edit': {
+      id: '/_auth/services/$id/edit'
+      path: '/services/$id/edit'
+      fullPath: '/services/$id/edit'
+      preLoaderRoute: typeof AuthServicesIdEditRouteImport
+      parentRoute: typeof AuthRoute
+    }
   }
 }
 
 interface AuthRouteChildren {
   AuthQueueRoute: typeof AuthQueueRoute
+  AuthServicesIndexRoute: typeof AuthServicesIndexRoute
+  AuthServicesNewRoute: typeof AuthServicesNewRoute
+  AuthServicesIdEditRoute: typeof AuthServicesIdEditRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthQueueRoute: AuthQueueRoute,
+  AuthServicesIndexRoute: AuthServicesIndexRoute,
+  AuthServicesNewRoute: AuthServicesNewRoute,
+  AuthServicesIdEditRoute: AuthServicesIdEditRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
