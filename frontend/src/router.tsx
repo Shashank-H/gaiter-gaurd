@@ -19,12 +19,12 @@ export function getRouter() {
     scrollRestoration: true,
   });
 
-  return { router, queryClient };
+  return router;
 }
 
 // Register router type for type-safe navigation throughout the app
 declare module '@tanstack/react-router' {
   interface Register {
-    router: ReturnType<typeof getRouter>['router'];
+    router: ReturnType<typeof getRouter>;
   }
 }

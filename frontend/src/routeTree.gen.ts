@@ -56,16 +56,16 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/queue': typeof AuthQueueRoute
-  '/services/': typeof AuthServicesIndexRoute
   '/services/new': typeof AuthServicesNewRoute
+  '/services/': typeof AuthServicesIndexRoute
   '/services/$id/edit': typeof AuthServicesIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/queue': typeof AuthQueueRoute
-  '/services/': typeof AuthServicesIndexRoute
   '/services/new': typeof AuthServicesNewRoute
+  '/services': typeof AuthServicesIndexRoute
   '/services/$id/edit': typeof AuthServicesIdEditRoute
 }
 export interface FileRoutesById {
@@ -74,16 +74,36 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
   '/_auth/queue': typeof AuthQueueRoute
-  '/_auth/services/': typeof AuthServicesIndexRoute
   '/_auth/services/new': typeof AuthServicesNewRoute
+  '/_auth/services/': typeof AuthServicesIndexRoute
   '/_auth/services/$id/edit': typeof AuthServicesIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/queue' | '/services/' | '/services/new' | '/services/$id/edit'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/queue'
+    | '/services/new'
+    | '/services/'
+    | '/services/$id/edit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/queue' | '/services/' | '/services/new' | '/services/$id/edit'
-  id: '__root__' | '/' | '/_auth' | '/login' | '/_auth/queue' | '/_auth/services/' | '/_auth/services/new' | '/_auth/services/$id/edit'
+  to:
+    | '/'
+    | '/login'
+    | '/queue'
+    | '/services/new'
+    | '/services'
+    | '/services/$id/edit'
+  id:
+    | '__root__'
+    | '/'
+    | '/_auth'
+    | '/login'
+    | '/_auth/queue'
+    | '/_auth/services/new'
+    | '/_auth/services/'
+    | '/_auth/services/$id/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -124,7 +144,7 @@ declare module '@tanstack/react-router' {
     }
     '/_auth/services/': {
       id: '/_auth/services/'
-      path: '/services/'
+      path: '/services'
       fullPath: '/services/'
       preLoaderRoute: typeof AuthServicesIndexRouteImport
       parentRoute: typeof AuthRoute
@@ -148,15 +168,15 @@ declare module '@tanstack/react-router' {
 
 interface AuthRouteChildren {
   AuthQueueRoute: typeof AuthQueueRoute
-  AuthServicesIndexRoute: typeof AuthServicesIndexRoute
   AuthServicesNewRoute: typeof AuthServicesNewRoute
+  AuthServicesIndexRoute: typeof AuthServicesIndexRoute
   AuthServicesIdEditRoute: typeof AuthServicesIdEditRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthQueueRoute: AuthQueueRoute,
-  AuthServicesIndexRoute: AuthServicesIndexRoute,
   AuthServicesNewRoute: AuthServicesNewRoute,
+  AuthServicesIndexRoute: AuthServicesIndexRoute,
   AuthServicesIdEditRoute: AuthServicesIdEditRoute,
 }
 
