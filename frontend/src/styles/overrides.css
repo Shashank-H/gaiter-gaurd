@@ -1,0 +1,210 @@
+/* Vercel-style dark theme overrides for oat.ink CSS variables
+   Achieves near-black backgrounds, subtle borders, and blue accent (#0070f3) */
+
+:root,
+[data-theme="dark"] {
+  /* Backgrounds */
+  --background: #000;
+  --background-alt: #0a0a0a;
+  --surface: #111;
+  --surface-hover: #1a1a1a;
+
+  /* Text */
+  --text: #ededed;
+  --text-secondary: #888;
+  --text-muted: #555;
+
+  /* Borders */
+  --border: #222;
+  --border-hover: #333;
+
+  /* Accent */
+  --accent: #0070f3;
+  --accent-hover: #0060d9;
+
+  /* Status colors */
+  --success: #00c853;
+  --warning: #ffab00;
+  --danger: #e53935;
+  --info: #29b6f6;
+
+  /* oat.ink variable overrides */
+  --bg: #000;
+  --bg-alt: #0a0a0a;
+  --fg: #ededed;
+  --fg-light: #888;
+  --border-color: #222;
+  --link: #0070f3;
+}
+
+/* Global reset and font */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background-color: #000;
+  color: #ededed;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Code and monospace */
+code,
+pre,
+kbd {
+  font-family: 'Geist Mono', 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.875em;
+}
+
+/* Links */
+a {
+  color: #0070f3;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Inputs */
+input,
+textarea,
+select {
+  background-color: #0a0a0a;
+  border: 1px solid #222;
+  border-radius: 6px;
+  color: #ededed;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-family: inherit;
+  width: 100%;
+  transition: border-color 0.15s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #0070f3;
+  box-shadow: 0 0 0 2px rgba(0, 112, 243, 0.2);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #555;
+}
+
+/* Buttons */
+button {
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+button[data-variant="primary"],
+button.primary {
+  background-color: #0070f3;
+  border: 1px solid #0070f3;
+  color: #fff;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+button[data-variant="primary"]:hover {
+  background-color: #0060d9;
+  border-color: #0060d9;
+}
+
+button[data-variant="danger"],
+button.danger {
+  background-color: transparent;
+  border: 1px solid #e53935;
+  color: #e53935;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+button[data-variant="danger"]:hover {
+  background-color: #e53935;
+  color: #fff;
+}
+
+button[data-variant="ghost"],
+button.ghost {
+  background-color: transparent;
+  border: 1px solid #222;
+  color: #888;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+button[data-variant="ghost"]:hover {
+  border-color: #333;
+  color: #ededed;
+  background-color: #111;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Cards */
+article.card {
+  background-color: #0a0a0a;
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 1.25rem;
+  transition: border-color 0.15s ease;
+}
+
+article.card:hover {
+  border-color: #333;
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2em 0.6em;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.badge[data-variant="danger"] {
+  background-color: rgba(229, 57, 53, 0.15);
+  color: #ef5350;
+  border: 1px solid rgba(229, 57, 53, 0.3);
+}
+
+.badge[data-variant="warning"] {
+  background-color: rgba(255, 171, 0, 0.15);
+  color: #ffc107;
+  border: 1px solid rgba(255, 171, 0, 0.3);
+}
+
+.badge[data-variant="success"] {
+  background-color: rgba(0, 200, 83, 0.15);
+  color: #4caf50;
+  border: 1px solid rgba(0, 200, 83, 0.3);
+}
+
+.badge[data-variant="info"] {
+  background-color: rgba(41, 182, 246, 0.15);
+  color: #29b6f6;
+  border: 1px solid rgba(41, 182, 246, 0.3);
+}
