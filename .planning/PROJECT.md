@@ -46,7 +46,8 @@ Agents never touch production credentials and cannot execute high-impact actions
 
 ## Constraints
 
-- **Tech stack**: Bun.js backend, React frontend (Bun or Vite), PostgreSQL database
+- **Tech stack**: Bun.js backend, React frontend (Bun or Vite), PostgreSQL database, Drizzle ORM
+- **Database**: PostgreSQL on localhost:5432, user `pglocal`, password `pglocal-pass`
 - **Security**: API keys encrypted at rest in vault, never exposed to agents, approval actions restricted to authenticated dashboard
 - **Agent protocol**: All agent requests must include Agent-Key and Idempotency-Key headers
 
@@ -60,6 +61,7 @@ Agents never touch production credentials and cannot execute high-impact actions
 | LLM + user rules + docs for risk | Combines semantic understanding from docs with explicit user-defined thresholds | — Pending |
 | Self-hosted first, SaaS later | Lets users control their own credential storage initially | — Pending |
 | Polling-based async resolution | Simpler than WebSockets for v1; agent polls GET /status/{action_id} | — Pending |
+| Drizzle ORM | User preference for type-safe, lightweight ORM | — Pending |
 
 ---
-*Last updated: 2026-02-15 after initialization*
+*Last updated: 2026-02-15 after roadmap creation*

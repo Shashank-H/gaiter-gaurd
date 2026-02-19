@@ -87,28 +87,28 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| VAULT-01 | — | Pending |
-| VAULT-02 | — | Pending |
-| VAULT-03 | — | Pending |
-| VAULT-04 | — | Pending |
-| AGENT-01 | — | Pending |
-| PROXY-01 | — | Pending |
-| PROXY-02 | — | Pending |
-| PROXY-03 | — | Pending |
-| PROXY-04 | — | Pending |
-| PROXY-05 | — | Pending |
-| RISK-02 | — | Pending |
-| APPR-01 | — | Pending |
-| APPR-02 | — | Pending |
-| APPR-03 | — | Pending |
-| DASH-01 | — | Pending |
-| DASH-02 | — | Pending |
+| VAULT-01 | Phase 2 | Pending |
+| VAULT-02 | Phase 2 | Pending |
+| VAULT-03 | Phase 2 | Pending |
+| VAULT-04 | Phase 2 | Pending |
+| AGENT-01 | Phase 3 | Pending |
+| PROXY-01 | Phase 4 | Pending |
+| PROXY-02 | Phase 3 | Pending |
+| PROXY-03 | Phase 4 | Pending |
+| PROXY-04 | Phase 4 | Pending |
+| PROXY-05 | Phase 5 | Pending |
+| RISK-02 | Phase 5 | Pending |
+| APPR-01 | Phase 5 | Pending |
+| APPR-02 | Phase 5 | Pending |
+| APPR-03 | Phase 5 | Pending |
+| DASH-01 | Phase 6 | Pending |
+| DASH-02 | Phase 6 | Pending |
 
 **Coverage:**
 - v1 requirements: 16 total
-- Mapped to phases: 0
-- Unmapped: 16 ⚠️
+- Mapped to phases: 16
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-15*
-*Last updated: 2026-02-15 after initial definition*
+*Last updated: 2026-02-15 after roadmap creation*
