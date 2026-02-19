@@ -93,10 +93,11 @@ Plans:
   3. Blocked requests are stored with full context (URL, method, headers, body, intent, risk assessment)
   4. Agent can poll GET /status/{action_id} and receive PENDING, APPROVED, DENIED, or REVOKED
   5. When approved, gateway executes the stored request with real credentials and caches response for retrieval
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- TBD (will be defined during phase planning)
+- [ ] 05-01-PLAN.md — Approval queue schema, env vars, approval service, risk service
+- [ ] 05-02-PLAN.md — Risk gate integration, status polling route, execute route, server wiring
 
 ### Phase 6: Dashboard
 **Goal**: Users can view pending actions and approve or deny them, plus manage services through web UI
@@ -123,5 +124,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 2. Secret Vault | 0/3 | In progress | - |
 | 3. Agent Authentication | 2/2 | ✓ Complete | 2026-02-16 |
 | 4. Gateway Proxy Core | 2/2 | ✓ Complete | 2026-02-16 |
-| 5. Risk & Approval Flow | 0/TBD | Not started | - |
+| 5. Risk & Approval Flow | 0/2 | Not started | - |
 | 6. Dashboard | 0/TBD | Not started | - |
