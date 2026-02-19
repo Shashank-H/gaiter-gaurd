@@ -1,0 +1,24 @@
+{
+  "name": "gaiter-guard",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun --watch src/server.ts",
+    "start": "bun src/server.ts",
+    "db:generate": "bun drizzle-kit generate",
+    "db:migrate": "bun run scripts/migrate.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "drizzle-kit": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "drizzle-orm": "latest",
+    "postgres": "latest",
+    "jose": "latest"
+  }
+}
