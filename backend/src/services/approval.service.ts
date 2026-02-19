@@ -2,7 +2,7 @@
 // State machine: PENDING → APPROVED | DENIED; APPROVED → EXECUTED | EXPIRED
 
 import { db } from '@/config/db';
-import { approvalQueue } from '@/db/schema';
+import { approvalQueue, agents } from '@/db/schema';
 import { eq, and, lt } from 'drizzle-orm';
 
 /**
@@ -121,6 +121,46 @@ export async function expireStaleApprovals(): Promise<void> {
         lt(approvalQueue.approvalExpiresAt, new Date())
       )
     );
+}
+
+/**
+ * List all PENDING approval queue entries for the authenticated user.
+ *
+ * Joins approvalQueue with agents to filter by userId. Only returns entries
+ * whose agent belongs to the given user, ordered newest-first.
+ *
+ * @param userId - The authenticated user's ID
+ * @returns Array of pending approval entries with agent name included
+ */
+export async function listPendingForUser(userId: number) {
+  const rows = await db
+    .select({
+      id: approvalQueue.id,
+      actionId: approvalQueue.actionId,
+      agentId: approvalQueue.agentId,
+      agentName: agents.name,
+      serviceId: approvalQueue.serviceId,
+      method: approvalQueue.method,
+      targetUrl: approvalQueue.targetUrl,
+      requestHeaders: approvalQueue.requestHeaders,
+      requestBody: approvalQueue.requestBody,
+      intent: approvalQueue.intent,
+      riskScore: approvalQueue.riskScore,
+      riskExplanation: approvalQueue.riskExplanation,
+      status: approvalQueue.status,
+      createdAt: approvalQueue.createdAt,
+    })
+    .from(approvalQueue)
+    .innerJoin(agents, eq(approvalQueue.agentId, agents.id))
+    .where(
+      and(
+        eq(approvalQueue.status, 'PENDING'),
+        eq(agents.userId, userId)
+      )
+    )
+    .orderBy(approvalQueue.createdAt);
+
+  return rows;
 }
 
 /**
