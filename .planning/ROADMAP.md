@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Project scaffolding, database schema, authentication framework ✓ (2026-02-15)
 - [ ] **Phase 2: Secret Vault** - Service registration, credential storage, API documentation uploads
-- [ ] **Phase 3: Agent Authentication** - Agent key generation and validation system
+- [x] **Phase 3: Agent Authentication** - Agent key generation and validation system ✓ (2026-02-16)
 - [ ] **Phase 4: Gateway Proxy Core** - Request proxying, credential injection, transparent forwarding
 - [ ] **Phase 5: Risk & Approval Flow** - Risk assessment, action blocking, approval queue
 - [ ] **Phase 6: Dashboard** - Approval UI and service management interface
@@ -65,8 +65,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Agent schema, API key utilities, agent service layer (AGENT-01)
-- [ ] 03-02-PLAN.md — Agent REST API, agent auth middleware, server wiring (PROXY-02)
+- [x] 03-01-PLAN.md — Agent schema, API key utilities, agent service layer (AGENT-01)
+- [x] 03-02-PLAN.md — Agent REST API, agent auth middleware, server wiring (PROXY-02)
 
 ### Phase 4: Gateway Proxy Core
 **Goal**: Agents can proxy requests through the gateway with automatic credential injection for non-risky operations
@@ -120,7 +120,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/2 | ✓ Complete | 2026-02-15 |
 | 2. Secret Vault | 0/3 | In progress | - |
-| 3. Agent Authentication | 0/2 | Not started | - |
+| 3. Agent Authentication | 2/2 | ✓ Complete | 2026-02-16 |
 | 4. Gateway Proxy Core | 0/TBD | Not started | - |
 | 5. Risk & Approval Flow | 0/TBD | Not started | - |
 | 6. Dashboard | 0/TBD | Not started | - |
