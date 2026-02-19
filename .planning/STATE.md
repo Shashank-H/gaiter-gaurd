@@ -10,27 +10,27 @@ See: .planning/PROJECT.md (updated 2026-02-15)
 ## Current Position
 
 Phase: 1 of 6 (Foundation)
-Plan: 1 of 2 in current phase
+Plan: 2 of 2 in current phase
 Status: Executing
-Last activity: 2026-02-15 — Completed 01-01-PLAN.md (Project scaffolding and server foundation)
+Last activity: 2026-02-15 — Completed 01-02-PLAN.md (Authentication system)
 
-Progress: [██░░░░░░░░] 8% (1/12 plans)
+Progress: [███░░░░░░░] 17% (2/12 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
-- Average duration: 5 min
-- Total execution time: 0.08 hours
+- Total plans completed: 2
+- Average duration: 4 min
+- Total execution time: 0.13 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-foundation | 1 | 5 min | 5 min |
+| 01-foundation | 2 | 8 min | 4 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (5 min)
+- Last 5 plans: 01-01 (5 min), 01-02 (3 min)
 - Trend: Just started
 
 *Updated after each plan completion*
@@ -49,6 +49,10 @@ Recent decisions affecting current work:
 - Use pathname-based routing instead of Bun routes object API — More portable across Bun versions (01-01)
 - Separate health and ready endpoints — Kubernetes best practices for liveness/readiness (01-01)
 - Add userId index on refresh_tokens — Per research, critical for token lookup performance (01-01)
+- Use jose library for JWT operations — Well-maintained, TypeScript-native, follows modern standards (01-02)
+- Implement refresh token rotation — Security best practice, prevents token reuse attacks (01-02)
+- Store only hashed refresh tokens — Defense in depth, database compromise doesn't expose usable tokens (01-02)
+- Return generic "Invalid credentials" for all login failures — Prevents user enumeration attacks (01-02)
 
 ### Pending Todos
 
@@ -61,5 +65,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Completed 01-01-PLAN.md execution (Project scaffolding and server foundation)
-Resume file: .planning/phases/01-foundation/01-01-SUMMARY.md
+Stopped at: Completed 01-02-PLAN.md execution (Authentication system)
+Resume file: .planning/phases/01-foundation/01-02-SUMMARY.md
