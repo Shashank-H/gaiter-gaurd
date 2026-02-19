@@ -2,37 +2,50 @@
 
 import { env } from '@/config/env';
 import { healthHandler, readyHandler } from '@/routes/health';
+import { handleRegister, handleLogin, handleRefresh, handleMe } from '@/routes/auth';
 import { errorResponse } from '@/utils/responses';
 
+// Type for route handlers
+type RouteHandler = (req?: Request) => Promise<Response>;
+
 // Define routes with their handlers
-const routes = {
+const routes: Record<string, RouteHandler> = {
   'GET /health': healthHandler,
   'GET /ready': readyHandler,
-} as const;
+  'POST /auth/register': handleRegister,
+  'POST /auth/login': handleLogin,
+  'POST /auth/refresh': handleRefresh,
+  'GET /auth/me': handleMe,
+};
 
 // Main fetch handler for routing
 async function handleRequest(req: Request): Promise<Response> {
-  const url = new URL(req.url);
-  const method = req.method;
-  const pathname = url.pathname;
-  const routeKey = `${method} ${pathname}` as keyof typeof routes;
+  try {
+    const url = new URL(req.url);
+    const method = req.method;
+    const pathname = url.pathname;
+    const routeKey = `${method} ${pathname}`;
 
-  // Check if route exists
-  const handler = routes[routeKey];
+    // Check if route exists
+    const handler = routes[routeKey];
 
-  if (handler) {
-    // Route exists - call the handler
-    return await handler();
+    if (handler) {
+      // Route exists - call the handler with request
+      return await handler(req);
+    }
+
+    // Check if path exists but with wrong method
+    const pathExists = Object.keys(routes).some((key) => key.endsWith(pathname));
+    if (pathExists) {
+      return errorResponse('Method not allowed', 405);
+    }
+
+    // Route not found
+    return errorResponse('Not found', 404);
+  } catch (error) {
+    console.error('Request handler error:', error);
+    return errorResponse('Internal server error', 500);
   }
-
-  // Check if path exists but with wrong method
-  const pathExists = Object.keys(routes).some((key) => key.endsWith(pathname));
-  if (pathExists) {
-    return errorResponse('Method not allowed', 405);
-  }
-
-  // Route not found
-  return errorResponse('Not found', 404);
 }
 
 // Global error handler
