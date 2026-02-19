@@ -40,6 +40,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [ ] **DASH-01**: User can view pending actions with full request context and approve or deny them
 - [ ] **DASH-02**: User can register, edit, and delete services with their API keys through the UI
+- [ ] **DASH-03**: Agent management UI (create agents, view keys, manage scopes)
 
 ## v2 Requirements
 
@@ -58,7 +59,6 @@ Deferred to future release. Tracked but not in current roadmap.
 
 ### Dashboard
 
-- **DASH-03**: Agent management UI (create agents, view keys, manage scopes)
 - **DASH-04**: Global Block (kill switch) to terminate agent sessions
 
 ### Notifications
@@ -103,10 +103,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | APPR-03 | Phase 5 | Pending |
 | DASH-01 | Phase 6 | Pending |
 | DASH-02 | Phase 6 | Pending |
+| DASH-03 | Phase 6.1 | Pending |
 
 **Coverage:**
-- v1 requirements: 16 total
-- Mapped to phases: 16
+- v1 requirements: 17 total
+- Mapped to phases: 17
 - Unmapped: 0
 
 ---
