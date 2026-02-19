@@ -4,6 +4,7 @@ import { env } from '@/config/env';
 import { healthHandler, readyHandler } from '@/routes/health';
 import { handleRegister, handleLogin, handleRefresh, handleMe } from '@/routes/auth';
 import { errorResponse } from '@/utils/responses';
+import { initEncryption } from '@/services/encryption.service';
 
 // Type for route handlers
 type RouteHandler = (req?: Request) => Promise<Response>;
@@ -53,6 +54,9 @@ function handleError(error: Error): Response {
   console.error('Server error:', error);
   return errorResponse(error.message || 'Internal server error', 500);
 }
+
+// Initialize encryption before starting server
+initEncryption();
 
 // Start the server
 const server = Bun.serve({
