@@ -118,7 +118,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 6.1
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -128,3 +128,20 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 4. Gateway Proxy Core | 2/2 | ✓ Complete | 2026-02-16 |
 | 5. Risk & Approval Flow | 0/2 | Not started | - |
 | 6. Dashboard | 0/3 | Not started | - |
+| 6.1 Agent Management UI | 0/2 | Not started | - |
+
+### Phase 6.1: Agent Management UI (INSERTED)
+**Goal**: Users can create agents, view API key prefixes, manage service scopes, and revoke agents through the dashboard
+**Depends on**: Phase 6
+**Requirements**: DASH-03
+**Success Criteria** (what must be TRUE):
+  1. User can create a new agent with a name and service scope selections
+  2. Full API key is displayed once on creation (never retrievable again)
+  3. User can view all agents with key prefixes, status, and last-used timestamps
+  4. User can edit agent name and service scope associations
+  5. User can revoke (deactivate) or delete agents
+**Plans:** 2 plans
+
+Plans:
+- [ ] 06.1-01-PLAN.md — Agent API layer, hooks, card component, nav link, and list page
+- [ ] 06.1-02-PLAN.md — Create page with API key reveal, edit page with details and scope sections
