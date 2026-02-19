@@ -30,10 +30,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. PostgreSQL database is provisioned with migrations system in place
   3. User authentication (email/password) works for dashboard access
   4. API endpoints return structured JSON responses with proper error handling
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- TBD (will be defined during phase planning)
+- [ ] 01-01-PLAN.md — Project scaffolding, Bun server, DB schema, health endpoints
+- [ ] 01-02-PLAN.md — User authentication (register, login, JWT, refresh token rotation)
 
 ### Phase 2: Secret Vault
 **Goal**: Users can securely register services, store encrypted credentials, and upload API documentation
@@ -110,11 +111,11 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/TBD | Not started | - |
+| 1. Foundation | 0/2 | Planning complete | - |
 | 2. Secret Vault | 0/TBD | Not started | - |
 | 3. Agent Authentication | 0/TBD | Not started | - |
 | 4. Gateway Proxy Core | 0/TBD | Not started | - |
