@@ -19,7 +19,9 @@ import {
   handleDeleteAgent,
   handleUpdateAgentServices,
 } from '@/routes/agents';
-import { handleProxy } from '@/routes/proxy';
+import { handleProxy, handleProxyExecute } from '@/routes/proxy';
+import { handleApprovalStatus } from '@/routes/approval';
+import { expireStaleApprovals } from '@/services/approval.service';
 import { errorResponse } from '@/utils/responses';
 import { initEncryption } from '@/services/encryption.service';
 
@@ -104,6 +106,18 @@ async function handleRequest(req: Request): Promise<Response> {
       if (method === 'POST') return await handleProxy(req);
     }
 
+    // GET /status/:actionId — agent polls for approval status
+    const statusMatch = pathname.match(/^\/status\/([0-9a-f-]{36})$/);
+    if (statusMatch && method === 'GET') {
+      return await handleApprovalStatus(req, { actionId: statusMatch[1] as string });
+    }
+
+    // POST /proxy/execute/:actionId — agent executes approved request
+    const executeMatch = pathname.match(/^\/proxy\/execute\/([0-9a-f-]{36})$/);
+    if (executeMatch && method === 'POST') {
+      return await handleProxyExecute(req, { actionId: executeMatch[1] as string });
+    }
+
     // Check if path exists but with wrong method
     const pathExists = Object.keys(routes).some((key) => key.endsWith(pathname));
     if (pathExists) {
@@ -126,6 +140,14 @@ function handleError(error: Error): Response {
 
 // Initialize encryption before starting server
 initEncryption();
+
+// TTL cleanup: expire approved requests that haven't been executed within the TTL window
+// Runs every 5 minutes — prevents stale APPROVED entries accumulating in the queue
+setInterval(() => {
+  expireStaleApprovals().catch((err) => {
+    console.error('Approval TTL cleanup error:', err);
+  });
+}, 5 * 60 * 1000); // Every 5 minutes
 
 // Start the server
 const server = Bun.serve({
