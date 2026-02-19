@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-15)
 
 **Core value:** Agents never touch production credentials and cannot execute high-impact actions without explicit human approval — the trust boundary is enforced by the gateway, not by the agent.
-**Current focus:** Phase 06.1 (Agent Management UI) — Plan 01 complete, Plan 02 up next
+**Current focus:** Phase 06.1 (Agent Management UI) — Plan 02 complete, Plan 03 up next
 
 ## Current Position
 
 Phase: 06.1 of 6 (Agent Management UI - inserted after Dashboard)
-Plan: 1 of 3 in current phase (06.1-01 complete)
+Plan: 2 of 3 in current phase (06.1-02 complete)
 Status: In Progress
-Last activity: 2026-02-18 — Completed 06.1-01: Agent API Layer, Hooks, Card, and List Page
+Last activity: 2026-02-18 — Completed 06.1-02: Agent Create/Edit Pages
 
 Progress: [█████████░] 92% (12/13 plans + 06.1 phase in progress)
 
@@ -35,7 +35,7 @@ Progress: [█████████░] 92% (12/13 plans + 06.1 phase in prog
 | 06-dashboard | 2 | 22 min | 11 min |
 
 **Recent Trend:**
-- Last 5 plans: 05-01 (2 min), 05-02 (3 min), 06-01 (18 min), 06-02 (4 min)
+- Last 5 plans: 05-02 (3 min), 06-01 (18 min), 06-02 (4 min), 06.1-01 (4 min), 06.1-02 (3 min)
 - Trend: Stabilizing after initial frontend scaffolding spike
 
 *Updated after each plan completion*
@@ -101,6 +101,9 @@ Recent decisions affecting current work:
 - [Phase 06.1-agent-management-ui]: Revoked agents section uses native <details>/<summary> element for collapse — no React state needed
 - [Phase 06.1-agent-management-ui]: Revoke/reactivate mutations use field update optimistic pattern (not filter/add), following useDeleteService for delete
 - [Phase 06.1-agent-management-ui]: Future route paths cast as 'never' until routeTree.gen.ts regenerates on next dev run
+- [Phase 06.1-agent-management-ui]: API key stored only in local useState on create page — never in TanStack Query cache (security)
+- [Phase 06.1-agent-management-ui]: Two-section edit page pattern: each section has independent <form> and save button
+- [Phase 06.1-agent-management-ui]: Key reveal modal: user must click "I've saved the key" before navigating to list
 
 ### Roadmap Evolution
 
@@ -117,5 +120,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Completed 06.1-01-PLAN.md — Agent API Layer, Hooks, Card, and List Page
+Stopped at: Completed 06.1-02-PLAN.md — Agent Create/Edit Pages
 Resume file: None
