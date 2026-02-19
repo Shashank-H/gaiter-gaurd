@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-02-15)
 ## Current Position
 
 Phase: 2 of 6 (Secret Vault)
-Plan: 1 of 3 in current phase
+Plan: 2 of 3 in current phase
 Status: In progress
-Last activity: 2026-02-15 — Completed 02-01: Database Schema and Encryption Foundation
+Last activity: 2026-02-15 — Completed 02-02: Service CRUD API with Encrypted Credentials
 
-Progress: [███░░░░░░░] 25% (3/12 plans)
+Progress: [███░░░░░░░] 33% (4/12 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
-- Average duration: 4 min
-- Total execution time: 0.19 hours
+- Total plans completed: 4
+- Average duration: 5 min
+- Total execution time: 0.35 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 2 | 8 min | 4 min |
-| 02-secret-vault | 1 | 4 min | 4 min |
+| 02-secret-vault | 2 | 10 min | 5 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (5 min), 01-02 (3 min), 02-01 (4 min)
+- Last 5 plans: 01-01 (5 min), 01-02 (3 min), 02-01 (4 min), 02-02 (6 min)
 - Trend: Consistent velocity
 
 *Updated after each plan completion*
@@ -58,6 +58,9 @@ Recent decisions affecting current work:
 - AES-256-GCM with scrypt key derivation — Industry standard authenticated encryption (02-01)
 - Cascade deletes on credentials/documentation — Prevents orphaned data when services deleted (02-01)
 - Zod for request validation — Best TypeScript inference, modern API, 2026 ecosystem standard (02-01)
+- [Phase 02-secret-vault]: Parameterized routing pattern for /services/:id paths
+- [Phase 02-secret-vault]: API responses show credential key names but never values
+- [Phase 02-secret-vault]: Replace semantics for credential updates (delete all, insert new)
 
 ### Pending Todos
 
@@ -70,5 +73,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Completed 02-01-PLAN.md — Database schema and encryption foundation
+Stopped at: Completed 02-02-PLAN.md — Service CRUD API with encrypted credentials
 Resume file: None
