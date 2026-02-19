@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-15)
 ## Current Position
 
 Phase: 4 of 6 (Gateway Proxy Core)
-Plan: 1 of 2 in current phase
+Plan: 2 of 2 in current phase
 Status: Complete
-Last activity: 2026-02-16 — Completed 04-01: Proxy Core Infrastructure
+Last activity: 2026-02-16 — Completed 04-02: Proxy Route Handler
 
-Progress: [██████░░░░] 58% (7/12 plans)
+Progress: [███████░░░] 67% (8/12 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
+- Total plans completed: 8
 - Average duration: 4 min
-- Total execution time: 0.50 hours
+- Total execution time: 0.53 hours
 
 **By Phase:**
 
@@ -30,11 +30,11 @@ Progress: [██████░░░░] 58% (7/12 plans)
 | 01-foundation | 2 | 8 min | 4 min |
 | 02-secret-vault | 2 | 10 min | 5 min |
 | 03-agent-authentication | 2 | 6 min | 3 min |
-| 04-gateway-proxy-core | 1 | 5 min | 5 min |
+| 04-gateway-proxy-core | 2 | 6 min | 3 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-02 (6 min), 03-01 (2 min), 03-02 (4 min), 04-01 (5 min)
-- Trend: Stable (last plan: 5 min)
+- Last 5 plans: 03-01 (2 min), 03-02 (4 min), 04-01 (5 min), 04-02 (1 min)
+- Trend: Improving (last plan: 1 min)
 
 *Updated after each plan completion*
 
@@ -77,6 +77,9 @@ Recent decisions affecting current work:
 - [Phase 04-gateway-proxy-core]: SHA-256 request hashing for duplicate detection (method+url+body)
 - [Phase 04-gateway-proxy-core]: 30s timeout and 10MB size limit for proxied requests
 - [Phase 04-gateway-proxy-core]: Manual editing of Drizzle migrations when regenerating full schema
+- [Phase 04-gateway-proxy-core]: Header takes precedence over body for Idempotency-Key (04-02)
+- [Phase 04-gateway-proxy-core]: X-Proxy-Status and X-Idempotency-Status headers for response metadata (04-02)
+- [Phase 04-gateway-proxy-core]: Content-Type passthrough from target response (04-02)
 
 ### Pending Todos
 
@@ -89,5 +92,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-16
-Stopped at: Completed 04-01-PLAN.md — Proxy Core Infrastructure
+Stopped at: Completed 04-02-PLAN.md — Proxy Route Handler
 Resume file: None
