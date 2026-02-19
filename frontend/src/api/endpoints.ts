@@ -95,7 +95,58 @@ export const api = {
     });
     return res.json();
   },
+
+  // Agents
+  listAgents: async (): Promise<AgentType[]> => {
+    const res = await authedFetch('/agents');
+    return res.json();
+  },
+
+  createAgent: async (data: { name: string; serviceIds: number[] }) => {
+    const res = await authedFetch('/agents', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+    return res.json() as Promise<{ agent: AgentType; apiKey: string }>;
+  },
+
+  getAgent: async (id: number): Promise<AgentType> => {
+    const res = await authedFetch(`/agents/${id}`);
+    return res.json();
+  },
+
+  updateAgent: async (id: number, data: { name?: string; isActive?: boolean }): Promise<AgentType> => {
+    const res = await authedFetch(`/agents/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+    return res.json();
+  },
+
+  deleteAgent: async (id: number) => {
+    return authedFetch(`/agents/${id}`, { method: 'DELETE' });
+  },
+
+  updateAgentServices: async (id: number, serviceIds: number[]): Promise<{ message: string; services: Array<{ id: number; name: string }> }> => {
+    const res = await authedFetch(`/agents/${id}/services`, {
+      method: 'PUT',
+      body: JSON.stringify({ serviceIds }),
+    });
+    return res.json();
+  },
 };
+
+// Agent type matching backend response
+export interface AgentType {
+  id: number;
+  name: string;
+  keyPrefix: string;
+  isActive: boolean;
+  lastUsedAt: string | null;
+  createdAt: string;
+  updatedAt?: string;
+  services: Array<{ id: number; name: string }>;
+}
 
 // Type for pending approval entries from the dashboard API
 export interface PendingApproval {
