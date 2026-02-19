@@ -62,10 +62,11 @@ Plans:
   2. Agent requests with valid Agent-Key are accepted
   3. Agent requests with invalid or missing Agent-Key are rejected with 401
   4. Agent-Key scope validation ensures agents can only access their authorized services
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- TBD (will be defined during phase planning)
+- [ ] 03-01-PLAN.md — Agent schema, API key utilities, agent service layer (AGENT-01)
+- [ ] 03-02-PLAN.md — Agent REST API, agent auth middleware, server wiring (PROXY-02)
 
 ### Phase 4: Gateway Proxy Core
 **Goal**: Agents can proxy requests through the gateway with automatic credential injection for non-risky operations
@@ -119,7 +120,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/2 | ✓ Complete | 2026-02-15 |
 | 2. Secret Vault | 0/3 | In progress | - |
-| 3. Agent Authentication | 0/TBD | Not started | - |
+| 3. Agent Authentication | 0/2 | Not started | - |
 | 4. Gateway Proxy Core | 0/TBD | Not started | - |
 | 5. Risk & Approval Flow | 0/TBD | Not started | - |
 | 6. Dashboard | 0/TBD | Not started | - |
