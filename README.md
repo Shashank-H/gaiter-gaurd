@@ -1,7 +1,7 @@
 # GaiterGuard
 
 <p align="center">
-  <img src="./icon.png" alt="GaiterGuard" width="120" />
+  <img src="./icon.png" alt="GaiterGuard" width="250" />
 </p>
 
 **An intercepting API gateway that enforces human-in-the-loop (HITL) authorization for autonomous AI agents.**
