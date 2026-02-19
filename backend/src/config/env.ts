@@ -25,4 +25,12 @@ export const env = {
   JWT_SECRET: getEnvVar('JWT_SECRET'),
   JWT_ACCESS_EXPIRY: getEnvVar('JWT_ACCESS_EXPIRY', false) || '15m',
   JWT_REFRESH_EXPIRY: getEnvVar('JWT_REFRESH_EXPIRY', false) || '7d',
+  ENCRYPTION_SECRET: (() => {
+    const secret = getEnvVar('ENCRYPTION_SECRET');
+    if (secret.length < 32) {
+      throw new Error('ENCRYPTION_SECRET must be at least 32 characters long');
+    }
+    return secret;
+  })(),
+  ENCRYPTION_SALT: getEnvVar('ENCRYPTION_SALT', false) || 'gaiter-guard-salt-v1',
 };
