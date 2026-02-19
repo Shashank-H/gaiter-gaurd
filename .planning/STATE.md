@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-02-15)
 Phase: 06.1 of 6 (Agent Management UI - inserted after Dashboard)
 Plan: 2 of 3 in current phase (06.1-02 complete)
 Status: In Progress
-Last activity: 2026-02-18 — Completed 06.1-02: Agent Create/Edit Pages
+Last activity: 2026-02-18 - Completed quick task 1: implement the signup page with email and password
 
 Progress: [█████████░] 92% (12/13 plans + 06.1 phase in progress)
 
@@ -116,6 +116,12 @@ None yet.
 ### Blockers/Concerns
 
 None yet.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 1 | implement the signup page with email and password | 2026-02-18 | 8bab7e9 | [1-implement-the-signup-page-with-email-and](./quick/1-implement-the-signup-page-with-email-and/) |
 
 ## Session Continuity
 
