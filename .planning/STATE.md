@@ -98,6 +98,10 @@ Recent decisions affecting current work:
 - [Phase 06-dashboard]: React 19 + react-spring 9.x children incompatibility — cast animated('div') as unknown as React.FC<AnimatedDivProps> for SpringValue + children support
 - [Phase 06-dashboard]: Optimistic mutation pattern: cancelQueries → setQueryData filter → snapshot context → onError revert → onSettled invalidate
 
+### Roadmap Evolution
+
+- Phase 06.1 inserted after Phase 6: Agent Management UI (URGENT)
+
 ### Pending Todos
 
 None yet.
