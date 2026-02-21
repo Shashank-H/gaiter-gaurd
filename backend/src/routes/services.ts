@@ -17,6 +17,7 @@ import {
 } from '@/services/service.service';
 import { formatServiceResponse } from '@/utils/masking';
 import { successResponse, errorResponse } from '@/utils/responses';
+import { logger } from '@/utils/logger';
 
 // ============================================================================
 // Route Handlers
@@ -36,6 +37,7 @@ export async function handleCreateService(req: Request): Promise<Response> {
 
     // Create service
     const service = await createService(userId, data);
+    logger.info(`Service created: ${service.name} (id: ${service.id}) by user ${userId}`);
 
     // Get credential keys (we just created them, so we know what they are)
     const credentialKeys = Object.keys(data.credentials);
@@ -53,7 +55,7 @@ export async function handleCreateService(req: Request): Promise<Response> {
       return errorResponse(error.message, error.statusCode);
     }
     // Never log full error object - might contain credentials
-    console.error('Create service error:', error instanceof Error ? error.message : 'Unknown error');
+    logger.error('Create service error:', error instanceof Error ? error.message : 'Unknown error');
     return errorResponse('Internal server error', 500);
   }
 }
@@ -80,7 +82,7 @@ export async function handleListServices(req: Request): Promise<Response> {
     if (error instanceof AuthError) {
       return errorResponse(error.message, error.statusCode);
     }
-    console.error('List services error:', error instanceof Error ? error.message : 'Unknown error');
+    logger.error('List services error:', error instanceof Error ? error.message : 'Unknown error');
     return errorResponse('Internal server error', 500);
   }
 }
@@ -115,7 +117,7 @@ export async function handleGetService(req: Request, params: { id: string }): Pr
     if (error instanceof NotFoundError) {
       return errorResponse(error.message, error.statusCode);
     }
-    console.error('Get service error:', error instanceof Error ? error.message : 'Unknown error');
+    logger.error('Get service error:', error instanceof Error ? error.message : 'Unknown error');
     return errorResponse('Internal server error', 500);
   }
 }
@@ -159,7 +161,7 @@ export async function handleUpdateService(req: Request, params: { id: string }):
     if (error instanceof NotFoundError) {
       return errorResponse(error.message, error.statusCode);
     }
-    console.error('Update service error:', error instanceof Error ? error.message : 'Unknown error');
+    logger.error('Update service error:', error instanceof Error ? error.message : 'Unknown error');
     return errorResponse('Internal server error', 500);
   }
 }
@@ -181,6 +183,7 @@ export async function handleDeleteService(req: Request, params: { id: string }):
 
     // Delete service
     await deleteService(serviceId, userId);
+    logger.info(`Service deleted: id=${serviceId} by user ${userId}`);
 
     return successResponse({ message: 'Service deleted' }, 200);
   } catch (error) {
@@ -190,7 +193,7 @@ export async function handleDeleteService(req: Request, params: { id: string }):
     if (error instanceof NotFoundError) {
       return errorResponse(error.message, error.statusCode);
     }
-    console.error('Delete service error:', error instanceof Error ? error.message : 'Unknown error');
+    logger.error('Delete service error:', error instanceof Error ? error.message : 'Unknown error');
     return errorResponse('Internal server error', 500);
   }
 }
@@ -215,6 +218,7 @@ export async function handleUpsertCredentials(req: Request, params: { id: string
 
     // Upsert credentials
     const result = await upsertCredentials(serviceId, userId, data);
+    logger.info(`Credentials updated for service ${serviceId} by user ${userId}`);
 
     return successResponse({
       message: 'Credentials updated',
@@ -230,7 +234,7 @@ export async function handleUpsertCredentials(req: Request, params: { id: string
     if (error instanceof NotFoundError) {
       return errorResponse(error.message, error.statusCode);
     }
-    console.error('Upsert credentials error:', error instanceof Error ? error.message : 'Unknown error');
+    logger.error('Upsert credentials error:', error instanceof Error ? error.message : 'Unknown error');
     return errorResponse('Internal server error', 500);
   }
 }

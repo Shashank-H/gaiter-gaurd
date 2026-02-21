@@ -2,6 +2,7 @@
 // Fail-closed: LLM errors result in elevated risk score (never silently pass through)
 
 import { env } from '@/config/env';
+import { logger } from '@/utils/logger';
 
 /**
  * Input to the risk assessment function.
@@ -181,16 +182,21 @@ export async function assessRisk(params: RiskInput): Promise<RiskResult> {
     // Weighted blend: LLM opinion is more informative than pure method heuristic
     finalScore = llmResult.score * 0.7 + heuristicScore * 0.3;
     explanation = llmResult.explanation;
-  } catch {
+    logger.debug(`LLM risk assessment success: score=${llmResult.score}, explanation="${llmResult.explanation}"`);
+  } catch (error) {
     // FAIL CLOSED: on any LLM error, escalate the heuristic score
     // This ensures LLM unavailability never silently passes through risky requests
     finalScore = Math.min(1, heuristicScore + 0.3);
     explanation = `Risk assessed via method heuristics only (LLM unavailable). Method: ${params.method}`;
+    logger.warn('Risk assessment LLM failure (falling back to heuristics):', error instanceof Error ? error.message : error);
   }
 
-  return {
+  const result = {
     score: finalScore,
     explanation,
     blocked: finalScore >= env.RISK_THRESHOLD,
   };
+
+  logger.info(`Risk assessment result: score=${result.score.toFixed(2)}, blocked=${result.blocked}, target=${params.targetUrl}`);
+  return result;
 }

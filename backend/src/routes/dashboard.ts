@@ -13,6 +13,7 @@ import { agents } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { env } from '@/config/env';
 import { errorResponse } from '@/utils/responses';
+import { logger } from '@/utils/logger';
 
 /**
  * GET /approvals/pending
@@ -56,7 +57,7 @@ export async function handleListPendingApprovals(req: Request): Promise<Response
       return errorResponse(error.message, error.statusCode);
     }
 
-    console.error('List pending approvals error:', error instanceof Error ? error.message : 'Unknown error');
+    logger.error('List pending approvals error:', error instanceof Error ? error.message : 'Unknown error');
     return errorResponse('Internal server error', 500);
   }
 }
@@ -119,13 +120,15 @@ export async function handleApproveAction(
       return errorResponse('Action already resolved', 409);
     }
 
+    logger.info(`Action ${params.actionId} APPROVED by user ${userId}`);
+
     return Response.json({ status: 'APPROVED', action_id: params.actionId });
   } catch (error) {
     if (error instanceof AuthError) {
       return errorResponse(error.message, error.statusCode);
     }
 
-    console.error('Approve action error:', error instanceof Error ? error.message : 'Unknown error');
+    logger.error('Approve action error:', error instanceof Error ? error.message : 'Unknown error');
     return errorResponse('Internal server error', 500);
   }
 }
@@ -162,13 +165,15 @@ export async function handleDenyAction(
       return errorResponse('Action already resolved', 409);
     }
 
+    logger.info(`Action ${params.actionId} DENIED by user ${userId}`);
+
     return Response.json({ status: 'DENIED', action_id: params.actionId });
   } catch (error) {
     if (error instanceof AuthError) {
       return errorResponse(error.message, error.statusCode);
     }
 
-    console.error('Deny action error:', error instanceof Error ? error.message : 'Unknown error');
+    logger.error('Deny action error:', error instanceof Error ? error.message : 'Unknown error');
     return errorResponse('Internal server error', 500);
   }
 }

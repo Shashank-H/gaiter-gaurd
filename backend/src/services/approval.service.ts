@@ -3,7 +3,8 @@
 
 import { db } from '@/config/db';
 import { approvalQueue, agents } from '@/db/schema';
-import { eq, and, lt } from 'drizzle-orm';
+import { eq, and, lt, sql } from 'drizzle-orm';
+import { logger } from '@/utils/logger';
 
 /**
  * Create a new approval queue entry for a risk-blocked request.
@@ -98,7 +99,11 @@ export async function transitionStatus(
     )
     .returning({ id: approvalQueue.id });
 
-  return result.length > 0;
+  const success = result.length > 0;
+  if (success) {
+    logger.info(`Action ${actionId} transitioned: ${fromStatus} -> ${toStatus}`);
+  }
+  return success;
 }
 
 /**
@@ -112,7 +117,7 @@ export async function transitionStatus(
  * Called by a setInterval cleanup job in server startup.
  */
 export async function expireStaleApprovals(): Promise<void> {
-  await db
+  const result = await db
     .update(approvalQueue)
     .set({ status: 'EXPIRED' })
     .where(
@@ -120,7 +125,12 @@ export async function expireStaleApprovals(): Promise<void> {
         eq(approvalQueue.status, 'APPROVED'),
         lt(approvalQueue.approvalExpiresAt, new Date())
       )
-    );
+    )
+    .returning({ actionId: approvalQueue.actionId });
+
+  if (result.length > 0) {
+    logger.info(`Expired ${result.length} stale approvals`);
+  }
 }
 
 /**

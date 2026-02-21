@@ -18,6 +18,7 @@ import { db } from '@/config/db';
 import { services } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { successResponse, errorResponse } from '@/utils/responses';
+import { logger } from '@/utils/logger';
 
 /**
  * POST /proxy
@@ -50,6 +51,7 @@ export async function handleProxy(req: Request): Promise<Response> {
     }
 
     // Step 4: Execute proxy request
+    logger.info(`Proxying request for agent ${agentId} to ${data.targetUrl}`);
     const result = await executeProxyRequest(agentId, userId, data);
 
     // Step 5: Construct response with target's data + proxy metadata
@@ -98,6 +100,7 @@ export async function handleProxy(req: Request): Promise<Response> {
       return errorResponse(error.message, error.statusCode);
     }
     if (error instanceof RiskyRequestError) {
+      logger.info(`Request requires approval: actionId=${error.actionId}, score=${error.riskScore}`);
       return Response.json(
         {
           error: 'Request requires human approval',
@@ -114,7 +117,7 @@ export async function handleProxy(req: Request): Promise<Response> {
     }
 
     // Unknown error
-    console.error('Proxy handler error:', error instanceof Error ? error.message : 'Unknown error');
+    logger.error('Proxy handler error:', error instanceof Error ? error.message : 'Unknown error');
     return errorResponse('Internal server error', 500);
   }
 }
@@ -188,6 +191,7 @@ export async function handleProxyExecute(
     const headersWithCreds = await injectCredentials(parsedHeaders, row.serviceId, service.authType);
 
     // Step 8: Forward the stored request to the target
+    logger.info(`Executing approved action ${params.actionId} for agent ${agentId} to ${row.targetUrl}`);
     const response = await forwardRequest(
       row.targetUrl,
       row.method,
@@ -225,7 +229,7 @@ export async function handleProxyExecute(
       return errorResponse(error.message, error.statusCode);
     }
 
-    console.error('Proxy execute handler error:', error instanceof Error ? error.message : 'Unknown error');
+    logger.error('Proxy execute handler error:', error instanceof Error ? error.message : 'Unknown error');
     return errorResponse('Internal server error', 500);
   }
 }

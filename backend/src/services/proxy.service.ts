@@ -10,6 +10,7 @@ import { checkIdempotency, completeIdempotency, failIdempotency } from '@/servic
 import { createHash } from 'node:crypto';
 import { assessRisk } from '@/services/risk.service';
 import { createApprovalQueueEntry } from '@/services/approval.service';
+import { logger } from '@/utils/logger';
 
 /**
  * Custom error classes for proxy operations
@@ -106,6 +107,7 @@ export function validateTargetUrl(targetUrl: string, serviceBaseUrl: string): vo
 
   // Hostname must match
   if (target.hostname !== base.hostname) {
+    logger.warn(`SSRF Prevention: Hostname mismatch: ${target.hostname} vs ${base.hostname}`);
     throw new ProxyError(
       `Target hostname (${target.hostname}) does not match service baseUrl (${base.hostname})`,
       403
@@ -114,6 +116,7 @@ export function validateTargetUrl(targetUrl: string, serviceBaseUrl: string): vo
 
   // Target path must start with base path
   if (!target.pathname.startsWith(base.pathname)) {
+    logger.warn(`SSRF Prevention: Path mismatch: ${target.pathname} does not start with ${base.pathname}`);
     throw new ProxyError(
       `Target path must start with service baseUrl path (${base.pathname})`,
       403
@@ -130,12 +133,13 @@ export function validateTargetUrl(targetUrl: string, serviceBaseUrl: string): vo
     hostname.startsWith('192.168.') ||
     hostname.startsWith('169.254.')
   ) {
+    logger.warn(`SSRF Prevention: Private IP range blocked: ${hostname}`);
     throw new ProxyError('Access to private IP ranges is forbidden', 403);
   }
 
   // 172.16.0.0 - 172.31.255.255
   const ipMatch = hostname.match(/^172\.(\d+)\./);
-  if (ipMatch) {
+  if (ipMatch && ipMatch[1]) {
     const octet = parseInt(ipMatch[1], 10);
     if (octet >= 16 && octet <= 31) {
       throw new ProxyError('Access to private IP ranges is forbidden', 403);
@@ -227,6 +231,7 @@ export async function injectCredentials(
     try {
       decryptedCreds[cred.key] = decrypt(cred.encryptedValue);
     } catch (error) {
+      logger.error(`Failed to decrypt credentials for service ${serviceId}:`, error);
       throw new ProxyError('Failed to decrypt credentials', 500);
     }
   }
@@ -242,9 +247,8 @@ export async function injectCredentials(
 
     case 'api_key':
       // Use credential key name as header name, or default to X-API-Key
-      const apiKeyHeader = Object.keys(decryptedCreds).find((k) => k !== 'api_key')
-        ? Object.keys(decryptedCreds)[0]
-        : 'X-API-Key';
+      const keyNames = Object.keys(decryptedCreds);
+      const apiKeyHeader = keyNames.find((k) => k !== 'api_key') || keyNames[0] || 'X-API-Key';
       const apiKeyValue = decryptedCreds[apiKeyHeader] || decryptedCreds.api_key;
       if (!apiKeyValue) {
         throw new ProxyError('API key not found in credentials', 500);
@@ -337,6 +341,7 @@ export async function forwardRequest(
     };
   } catch (error: any) {
     if (error.name === 'AbortError') {
+      logger.warn(`Forward request timeout to ${targetUrl}`);
       throw new ProxyError('Request timeout (30s limit exceeded)', 504);
     }
     if (error instanceof ProxyError) {
@@ -344,6 +349,7 @@ export async function forwardRequest(
     }
     // Sanitize error message - include only safe information
     const url = new URL(targetUrl);
+    logger.error(`Failed to forward request to ${url.hostname}:`, error);
     throw new ProxyError(
       `Failed to forward request to ${url.hostname}: ${error.message || 'Unknown error'}`,
       502
@@ -429,6 +435,7 @@ export async function executeProxyRequest(
 
       if (idempotencyResult.status === 'completed') {
         // Return cached response
+        logger.info(`Idempotency HIT for agent ${agentId}: ${data.idempotencyKey}`);
         return {
           status: idempotencyResult.responseStatus,
           headers: idempotencyResult.responseHeaders,
@@ -470,7 +477,9 @@ export async function executeProxyRequest(
         errorMessage: null,
       })
       .execute()
-      .catch(() => {}); // Ignore audit log failures
+      .catch((err) => {
+        logger.error('Failed to write audit log:', err);
+      }); // Ignore audit log failures
 
     // Step 7: Complete idempotency (if key provided)
     if (idempotencyKeyId) {
@@ -500,7 +509,9 @@ export async function executeProxyRequest(
           errorMessage: error.message || 'Unknown error',
         })
         .execute()
-        .catch(() => {});
+        .catch((err) => {
+          logger.error('Failed to write failure audit log:', err);
+        });
     }
 
     // Fail idempotency (if key provided)
@@ -509,6 +520,7 @@ export async function executeProxyRequest(
     }
 
     // Re-throw the error to caller
+    logger.warn(`Proxy request failed for agent ${agentId}: ${error.message}`);
     throw error;
   }
 }

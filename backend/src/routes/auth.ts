@@ -6,13 +6,14 @@ import { jsonResponse, errorResponse } from '@/utils/responses';
 import { db } from '@/config/db';
 import { users } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { logger } from '@/utils/logger';
 
 /**
  * POST /auth/register - Register a new user
  */
 export async function handleRegister(req: Request): Promise<Response> {
   try {
-    const body = await req.json();
+    const body = (await req.json()) as any;
     const { email, password } = body;
 
     if (!email || !password) {
@@ -20,6 +21,7 @@ export async function handleRegister(req: Request): Promise<Response> {
     }
 
     const user = await registerUser(email, password);
+    logger.info(`User registered: ${email} (id: ${user.id})`);
 
     return jsonResponse(
       {
@@ -40,6 +42,7 @@ export async function handleRegister(req: Request): Promise<Response> {
         return errorResponse(error.message, 400);
       }
     }
+    logger.error('Registration failed:', error);
     return errorResponse('Registration failed', 500);
   }
 }
@@ -49,7 +52,7 @@ export async function handleRegister(req: Request): Promise<Response> {
  */
 export async function handleLogin(req: Request): Promise<Response> {
   try {
-    const body = await req.json();
+    const body = (await req.json()) as any;
     const { email, password } = body;
 
     if (!email || !password) {
@@ -57,6 +60,7 @@ export async function handleLogin(req: Request): Promise<Response> {
     }
 
     const result = await loginUser(email, password);
+    logger.info(`User logged in: ${email} (id: ${result.user.id})`);
 
     return jsonResponse({
       accessToken: result.accessToken,
@@ -67,6 +71,7 @@ export async function handleLogin(req: Request): Promise<Response> {
     if (error instanceof Error && error.message === 'Invalid credentials') {
       return errorResponse('Invalid credentials', 401);
     }
+    logger.error('Login failed:', error);
     return errorResponse('Login failed', 500);
   }
 }
@@ -76,7 +81,7 @@ export async function handleLogin(req: Request): Promise<Response> {
  */
 export async function handleRefresh(req: Request): Promise<Response> {
   try {
-    const body = await req.json();
+    const body = (await req.json()) as any;
     const { refreshToken } = body;
 
     if (!refreshToken) {
@@ -90,6 +95,7 @@ export async function handleRefresh(req: Request): Promise<Response> {
       refreshToken: result.refreshToken,
     });
   } catch (error) {
+    logger.error('Token refresh failed:', error);
     return errorResponse('Invalid refresh token', 401);
   }
 }
@@ -122,6 +128,7 @@ export async function handleMe(req: Request): Promise<Response> {
     if (error instanceof AuthError) {
       return errorResponse(error.message, error.statusCode);
     }
+    logger.error('Failed to get user info:', error);
     return errorResponse('Failed to get user info', 500);
   }
 }

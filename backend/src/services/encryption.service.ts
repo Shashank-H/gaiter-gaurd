@@ -3,6 +3,7 @@
 
 import { createCipheriv, createDecipheriv, randomBytes, scryptSync } from 'node:crypto';
 import { env } from '@/config/env';
+import { logger } from '@/utils/logger';
 
 const ALGORITHM = 'aes-256-gcm';
 const KEY_LENGTH = 32; // 256 bits
@@ -16,7 +17,7 @@ let ENCRYPTION_KEY: Buffer | null = null;
  */
 export function initEncryption(): void {
   if (ENCRYPTION_KEY) {
-    console.warn('Encryption already initialized, skipping re-initialization');
+    logger.warn('Encryption already initialized, skipping re-initialization');
     return;
   }
 
@@ -26,7 +27,7 @@ export function initEncryption(): void {
     KEY_LENGTH
   );
 
-  console.log('Encryption service initialized successfully');
+  logger.info('Encryption service initialized successfully');
 }
 
 /**
@@ -72,6 +73,9 @@ export function decrypt(ciphertext: string): string {
   }
 
   const [ivHex, authTagHex, encrypted] = parts;
+  if (!ivHex || !authTagHex || !encrypted) {
+    throw new Error('Invalid ciphertext format');
+  }
   const iv = Buffer.from(ivHex, 'hex');
   const authTag = Buffer.from(authTagHex, 'hex');
 

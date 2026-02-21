@@ -16,6 +16,7 @@ import {
   NotFoundError,
 } from '@/services/agent.service';
 import { successResponse, errorResponse } from '@/utils/responses';
+import { logger } from '@/utils/logger';
 
 // ============================================================================
 // Route Handlers
@@ -35,6 +36,7 @@ export async function handleCreateAgent(req: Request): Promise<Response> {
 
     // Create agent
     const result = await createAgent(userId, data);
+    logger.info(`Agent created: ${result.agent.name} (id: ${result.agent.id}) by user ${userId}`);
 
     // Return agent with full API key (only time it's exposed)
     return successResponse(result, 201);
@@ -48,7 +50,7 @@ export async function handleCreateAgent(req: Request): Promise<Response> {
     if (error instanceof NotFoundError) {
       return errorResponse(error.message, error.statusCode);
     }
-    console.error('Create agent error:', error instanceof Error ? error.message : 'Unknown error');
+    logger.error('Create agent error:', error instanceof Error ? error.message : 'Unknown error');
     return errorResponse('Internal server error', 500);
   }
 }
@@ -70,7 +72,7 @@ export async function handleListAgents(req: Request): Promise<Response> {
     if (error instanceof AuthError) {
       return errorResponse(error.message, error.statusCode);
     }
-    console.error('List agents error:', error instanceof Error ? error.message : 'Unknown error');
+    logger.error('List agents error:', error instanceof Error ? error.message : 'Unknown error');
     return errorResponse('Internal server error', 500);
   }
 }
@@ -101,7 +103,7 @@ export async function handleGetAgent(req: Request, params: { id: string }): Prom
     if (error instanceof NotFoundError) {
       return errorResponse(error.message, error.statusCode);
     }
-    console.error('Get agent error:', error instanceof Error ? error.message : 'Unknown error');
+    logger.error('Get agent error:', error instanceof Error ? error.message : 'Unknown error');
     return errorResponse('Internal server error', 500);
   }
 }
@@ -141,7 +143,7 @@ export async function handleUpdateAgent(req: Request, params: { id: string }): P
     if (error instanceof NotFoundError) {
       return errorResponse(error.message, error.statusCode);
     }
-    console.error('Update agent error:', error instanceof Error ? error.message : 'Unknown error');
+    logger.error('Update agent error:', error instanceof Error ? error.message : 'Unknown error');
     return errorResponse('Internal server error', 500);
   }
 }
@@ -163,6 +165,7 @@ export async function handleDeleteAgent(req: Request, params: { id: string }): P
 
     // Delete agent
     await deleteAgent(agentId, userId);
+    logger.info(`Agent deleted: id=${agentId} by user ${userId}`);
 
     return successResponse({ message: 'Agent deleted' }, 200);
   } catch (error) {
@@ -172,7 +175,7 @@ export async function handleDeleteAgent(req: Request, params: { id: string }): P
     if (error instanceof NotFoundError) {
       return errorResponse(error.message, error.statusCode);
     }
-    console.error('Delete agent error:', error instanceof Error ? error.message : 'Unknown error');
+    logger.error('Delete agent error:', error instanceof Error ? error.message : 'Unknown error');
     return errorResponse('Internal server error', 500);
   }
 }
@@ -197,6 +200,7 @@ export async function handleUpdateAgentServices(req: Request, params: { id: stri
 
     // Update agent services
     const updatedServices = await updateAgentServices(agentId, userId, data);
+    logger.info(`Services updated for agent ${agentId} by user ${userId}`);
 
     return successResponse({
       message: 'Agent services updated',
@@ -212,7 +216,7 @@ export async function handleUpdateAgentServices(req: Request, params: { id: stri
     if (error instanceof NotFoundError) {
       return errorResponse(error.message, error.statusCode);
     }
-    console.error('Update agent services error:', error instanceof Error ? error.message : 'Unknown error');
+    logger.error('Update agent services error:', error instanceof Error ? error.message : 'Unknown error');
     return errorResponse('Internal server error', 500);
   }
 }
