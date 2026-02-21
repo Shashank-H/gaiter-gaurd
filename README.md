@@ -11,10 +11,84 @@ Agents never hold production credentials. High-impact actions require explicit h
 ---
 
 ## How It Works
+
+```mermaid
+flowchart TD
+    Agent([AI Agent]) -->|"① POST /proxy\nAgent-Key + intent"| GW[GaiterGuard Gateway]
+    GW --> LLM{"② LLM Risk Assessment\nscore: 0.0 – 1.0"}
+
+    LLM -->|"Low risk\nscore < threshold"| Vault["③ Inject vault credentials"]
+    Vault --> API["④ Forward to Target API"]
+    API -->|"2xx response"| Agent
+
+    LLM -->|"High risk\nscore ≥ threshold"| Blocked["③ 428 Risk-Blocked\n+ action_id returned"]
+    Blocked -->|"Queued for review"| Queue[("Approval Queue")]
+    Blocked -->|"428 with action_id"| Agent
+
+    Queue --> Dash["Human Dashboard"]
+    Dash -->|"④ Approve"| Approved(["APPROVED"])
+    Dash -->|"④ Deny"| Denied(["DENIED"])
+
+    Agent -->|"⑤ Poll GET /status/{action_id}\nevery 5–10s"| Poll{"Status?"}
+    Poll -->|"PENDING — retry"| Poll
+    Approved -->|"status update"| Poll
+    Denied -->|"status update"| Poll
+    Poll -->|"APPROVED"| Execute["⑥ POST /proxy/execute/{action_id}"]
+    Execute --> Vault
+    Poll -->|"DENIED / EXPIRED"| Done["Handle gracefully\nlog · notify · retry"]
 ```
 
-```
+```mermaid
+sequenceDiagram
+    participant Agent as AI Agent
+    participant GW as GaiterGuard Gateway
+    participant LLM as LLM Risk Assessor
+    participant Vault as Encrypted Vault
+    participant API as Target API
+    participant DB as Approval Queue (DB)
+    participant Human as Human (Dashboard)
 
+    Agent->>GW: POST /proxy (Agent-Key, intent, targetUrl, method, body)
+    GW->>LLM: Assess risk (request + API docs + rules)
+
+    alt Low risk (score < threshold)
+        LLM-->>GW: score < threshold
+        GW->>Vault: Decrypt service credentials
+        Vault-->>GW: credentials
+        GW->>API: Forward request with real credentials
+        API-->>GW: 2xx upstream response
+        GW-->>Agent: 2xx (X-Proxy-Status: forwarded)
+
+    else High risk (score ≥ threshold)
+        LLM-->>GW: score ≥ threshold
+        GW->>DB: Store action (PENDING)
+        GW-->>Agent: 428 Risk-Blocked + action_id
+
+        loop Poll every 5–10s
+            Agent->>GW: GET /status/{action_id}
+            GW-->>Agent: { status: PENDING }
+        end
+
+        Human->>GW: PATCH /approvals/{action_id}/approve (or /deny)
+        GW->>DB: Update status → APPROVED (or DENIED)
+
+        Agent->>GW: GET /status/{action_id}
+
+        alt Approved
+            GW-->>Agent: { status: APPROVED }
+            Agent->>GW: POST /proxy/execute/{action_id}
+            GW->>Vault: Decrypt service credentials
+            Vault-->>GW: credentials
+            GW->>API: Forward original request with real credentials
+            API-->>GW: 2xx upstream response
+            GW-->>Agent: 2xx (X-Proxy-Status: executed-approved)
+
+        else Denied or Expired
+            GW-->>Agent: { status: DENIED } or { status: EXPIRED }
+            Agent->>Agent: Handle gracefully (log, notify, retry)
+        end
+    end
+```
 
 1. **Register services** — add a target API, upload its docs (OpenAPI, markdown, or URL), and store its credentials in the vault
 2. **Provision agents** — create an Agent-Key scoped to specific services; the agent never sees real credentials
